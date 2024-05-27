@@ -20,7 +20,7 @@ export const grey = {
 export const primary = {
   lighter: '#D0ECFE',
   light: '#73BAFB',
-  main: '#1877F2',
+  main: '#FF4500',
   dark: '#0C44AE',
   darker: '#042174',
   contrastText: '#FFFFFF',

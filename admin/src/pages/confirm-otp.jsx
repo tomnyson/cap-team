@@ -1,16 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { RegisterView } from 'src/sections/register';
+import { ConfirmOTPVIEW } from 'src/sections/confirm-otp';
+
 // ----------------------------------------------------------------------
 
-export default function registerPage() {
+export default function ConfirmOTPPage() {
   return (
     <>
       <Helmet>
-        <title> Đăng ký Tài khoản </title>
+        <title> Login | Minimal UI </title>
       </Helmet>
 
-      <RegisterView />
+      <ConfirmOTPVIEW />
     </>
   );
 }
