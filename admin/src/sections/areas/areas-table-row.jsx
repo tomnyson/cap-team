@@ -9,20 +9,17 @@ import { Popover, MenuItem } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
 
-import TicketDialog from './ticket-dialog'; // Chuyển đổi CreateTicketDialog thành TicketDialog
+import AreasDialog from './areas-dialog';  
 
-export default function TicketTableRow({
+export default function AreasTableRow({
   selected,
   name,
-  price,
   event,
-  quantity,
   opening_date,
   sale_end_date,
-  status,
+  description,
   handleClick,
   onEdit,
-  events, // Thêm prop events
 }) {
   const [open, setOpen] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -44,8 +41,6 @@ export default function TicketTableRow({
     setOpenDialog(false);
   };
 
-  const currentEvent = events?.find((e) => e.name === event) || {};
-
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -53,9 +48,8 @@ export default function TicketTableRow({
           <Checkbox checked={selected} onChange={handleClick} />
         </TableCell>
         <TableCell>{name}</TableCell>
-        <TableCell>{price}</TableCell>
         <TableCell>{event}</TableCell>
-        <TableCell align="center">{quantity}</TableCell>
+        <TableCell>{description}</TableCell>
         <TableCell>{new Date(opening_date).toLocaleDateString()}</TableCell>
         <TableCell>{new Date(sale_end_date).toLocaleDateString()}</TableCell>
         <TableCell align="right">
@@ -85,35 +79,31 @@ export default function TicketTableRow({
         </MenuItem>
       </Popover>
 
-      <TicketDialog
+      <AreasDialog
         open={openDialog}
         onClose={handleCloseDialog}
         onSave={onEdit}
         initialData={{
           id: name,
           name,
-          price,
-          event_id: currentEvent.id,
-          quantity,
+          event_id: event,
+          description: description,
           opening_date,
           sale_end_date,
         }}
-        events={events}
       />
     </>
   );
 }
 
-TicketTableRow.propTypes = {
+AreasTableRow.propTypes = {
   selected: PropTypes.bool,
   name: PropTypes.string,
-  price: PropTypes.number,
   event: PropTypes.string,
-  quantity: PropTypes.number,
+  description: PropTypes.string,
   opening_date: PropTypes.string,
   sale_end_date: PropTypes.string,
   status: PropTypes.bool,
   handleClick: PropTypes.func,
   onEdit: PropTypes.func,
-  events: PropTypes.array.isRequired,
 };

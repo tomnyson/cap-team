@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -10,23 +10,21 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { getAllTicket } from 'src/apis/ticket';
-import { getAllEventByEmail } from 'src/apis/event';
-import { tickets as initialTickets } from 'src/_mock/tickets';
+import { areas as initialAreas } from 'src/_mock/areas';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
 import TableNoData from '../table-no-data';
-import TicketDialog from '../ticket-dialog';
-import TicketTableRow from '../ticket-table-row';
+import AreasDialog from '../areas-dialog';
+import AreasTableRow from '../areas-table-row';
 import TableEmptyRows from '../table-empty-rows';
-import TicketTableHead from '../ticket-table-head';
-import TicketTableToolbar from '../ticket-table-toolbar';
+import AreasTableHead from '../areas-table-head';
+import AreasTableToolbar from '../areas-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
-export default function TicketView() {
-  const [tickets, setTickets] = useState(initialTickets);
+export default function AreasView() {
+  const [areas, setAreas] = useState(initialAreas);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -34,17 +32,6 @@ export default function TicketView() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openDialog, setOpenDialog] = useState(false);
-  const [events, setEvent] = useState([]);
-  console.log('🚀 ~ TicketView ~ events:', events);
-
-  useEffect(() => {
-    getAllTicket().then((res) => {
-      setTickets(res.data.ticket);
-    });
-    getAllEventByEmail('hptprobook@gmail.com').then((res) => {
-      setEvent(res.data);
-    });
-  }, []);
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -54,7 +41,7 @@ export default function TicketView() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = tickets.map((n) => n.name);
+      const newSelecteds = areas.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -101,18 +88,18 @@ export default function TicketView() {
     setOpenDialog(false);
   };
 
-  const handleCreateTicket = (newTicket) => {
-    setTickets([newTicket, ...tickets]);
+  const handleCreateareas = (newareas) => {
+    setAreas([newareas, ...areas]);
   };
 
-  const handleEditTicket = (updatedTicket) => {
-    setTickets((prevTickets) =>
-      prevTickets.map((ticket) => (ticket.id === updatedTicket.id ? updatedTicket : ticket))
+  const handleEditareas = (updatedareas) => {
+    setAreas((prevareas) =>
+      prevareas.map((areas) => (areas.id === updatedareas.id ? updatedareas : areas))
     );
   };
 
   const dataFiltered = applyFilter({
-    inputData: tickets,
+    inputData: areas,
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -121,21 +108,21 @@ export default function TicketView() {
 
   return (
     <Container>
+    
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Vé</Typography>
-
+        <Typography variant="h4">Khu vực</Typography>
         <Button
           variant="contained"
           color="inherit"
           startIcon={<Iconify icon="eva:plus-fill" />}
           onClick={handleOpenDialog}
         >
-          Tạo vé mới
+          Thêm khu vực
         </Button>
       </Stack>
 
       <Card>
-        <TicketTableToolbar
+        <AreasTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
@@ -144,18 +131,17 @@ export default function TicketView() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <TicketTableHead
+              <AreasTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={tickets.length}
+                rowCount={areas.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Tên vé' },
-                  { id: 'price', label: 'Giá' },
+                  { id: 'name', label: 'Tên khu vực' },
                   { id: 'event', label: 'Sự kiện' },
-                  { id: 'quantity', label: 'Số lượng', align: 'center' },
+                  { id: 'description', label: 'Mô tả' },
                   { id: 'opening_date', label: 'Ngày tạo' },
                   { id: 'sale_end_date', label: 'Ngày kết thúc' },
                   { id: '' },
@@ -165,27 +151,23 @@ export default function TicketView() {
                 {dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <TicketTableRow
+                    <AreasTableRow
                       key={row.id}
                       name={row.name}
-                      price={row.price}
                       event={row.event.name}
-                      events={events}
-                      quantity={row.quantity}
                       opening_date={row.opening_date}
                       sale_end_date={row.sale_end_date}
-                      status={row.status}
+                      description={row.description}
                       selected={selected.indexOf(row.name) !== -1}
                       handleClick={(event) => handleClick(event, row.name)}
-                      onEdit={handleEditTicket}
+                      onEdit={handleEditareas}
                     />
                   ))}
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, tickets.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, areas.length)}
                 />
-
                 {notFound && <TableNoData query={filterName} />}
               </TableBody>
             </Table>
@@ -195,7 +177,7 @@ export default function TicketView() {
         <TablePagination
           page={page}
           component="div"
-          count={tickets.length}
+          count={areas.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}
@@ -203,12 +185,7 @@ export default function TicketView() {
         />
       </Card>
 
-      <TicketDialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        onSave={handleCreateTicket}
-        events={events}
-      />
+      <AreasDialog open={openDialog} onClose={handleCloseDialog} onSave={handleCreateareas} />
     </Container>
   );
 }

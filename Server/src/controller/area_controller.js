@@ -1,7 +1,7 @@
 const AreaService = require('../service/area_service');
 const joi = require('joi');
-const { v4: uuidv4 } = require("uuid");
-const QRService = require("../service/qr_code_service");
+const { v4: uuidv4 } = require('uuid');
+const QRService = require('../service/qr_code_service');
 const getAllArea = async (req, res) => {
   try {
     const event_id = req.query.event_id;
@@ -15,7 +15,7 @@ const getAllArea = async (req, res) => {
 
 const getAreaById = async (req, res) => {
   try {
-    const { id} = req.params;
+    const { id } = req.params;
     const schedule = await AreaService.getAreaById(id);
     if (!schedule) {
       res.status(404).json({ error: 'Khu vực không tồn tại' });
@@ -30,39 +30,39 @@ const getAreaById = async (req, res) => {
 };
 
 const createArea = async (req, res) => {
-    try {
-      const id = uuidv4();
-      const { name, event_id, start_date, end_date, description } = req.body;
-      const data = {id, name, event_id, start_date, end_date, description};
+  try {
+    const id = uuidv4();
+    const { name, event_id, start_date, end_date, description } = req.body;
+    const data = { id, name, event_id, start_date, end_date, description };
 
-      const schema = joi.object({
-        name: joi.string().required(),
-        event_id: joi.string().required(),
-        start_date: joi.date().allow(null),
-        end_date: joi.date().allow(null),
-        description: joi.string().allow(null, ''),
-      });
-  
-      const { error } = await schema.validate(req.body);
-      if (error) {
-        res.status(400).json({ error: error.details[0].message });
-        return;
-      }
-  
-      const existingArea = await AreaService.checkAreaExists(event_id, name);
-      if (existingArea) {
-        res.status(409).json({ error: 'Khu vực này đã tồn tại trong sự kiện.' });
-        return;
-      }
-      
-      const result = await AreaService.createArea(data);
-      const area_id = id;
-      const qr = await QRService.createQR(event_id,area_id);
-      res.status(200).json(result);
-    } catch (error) {
-      console.error('Lỗi khi tạo khu vực', error);
-      res.status(500).json({ error: 'Đã xảy ra lỗi khi tạo khu vực.' });
+    const schema = joi.object({
+      name: joi.string().required(),
+      event_id: joi.string().required(),
+      start_date: joi.date().allow(null),
+      end_date: joi.date().allow(null),
+      description: joi.string().allow(null, ''),
+    });
+
+    const { error } = await schema.validate(req.body);
+    if (error) {
+      res.status(400).json({ error: error.details[0].message });
+      return;
     }
+
+    const existingArea = await AreaService.checkAreaExists(event_id, name);
+    if (existingArea) {
+      res.status(409).json({ error: 'Khu vực này đã tồn tại trong sự kiện.' });
+      return;
+    }
+
+    const result = await AreaService.createArea(data);
+    const area_id = id;
+    const qr = await QRService.createQR(event_id, area_id);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Lỗi khi tạo khu vực', error);
+    res.status(500).json({ error: 'Đã xảy ra lỗi khi tạo khu vực.' });
+  }
 };
 
 const updateArea = async (req, res) => {
@@ -84,7 +84,13 @@ const updateArea = async (req, res) => {
       return;
     }
 
-    const result = await AreaService.updateArea(id, { name, event_id, start_date, end_date, description });
+    const result = await AreaService.updateArea(id, {
+      name,
+      event_id,
+      start_date,
+      end_date,
+      description,
+    });
     if (!result) {
       res.status(404).json({ error: 'Khu vực không tồn tại' });
       return;

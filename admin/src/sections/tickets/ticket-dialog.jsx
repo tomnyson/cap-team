@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import React, { useState, useEffect } from 'react';
 
 import {
@@ -12,17 +13,21 @@ import {
   FormControl,
   DialogContent,
   DialogActions,
+  FormHelperText,
 } from '@mui/material';
 
-import { tickets } from 'src/_mock/tickets';
+import { createTicket } from 'src/apis/ticket';
 
-export default function TicketDialog({ open, onClose, onSave, initialData }) {
+export default function TicketDialog({ open, onClose, onSave, initialData, events }) {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [eventId, setEventId] = useState('');
   const [quantity, setQuantity] = useState('');
   const [openingDate, setOpeningDate] = useState('');
   const [saleEndDate, setSaleEndDate] = useState('');
+  const [minimum, setMinimum] = useState(1);
+  const [maximum, setMaximum] = useState(1);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (initialData) {
@@ -30,29 +35,65 @@ export default function TicketDialog({ open, onClose, onSave, initialData }) {
       setPrice(initialData.price);
       setEventId(initialData.event_id);
       setQuantity(initialData.quantity);
-      setOpeningDate(initialData.opening_date);
-      setSaleEndDate(initialData.sale_end_date);
+      setOpeningDate(formatDateTimeLocal(initialData.opening_date));
+      setSaleEndDate(formatDateTimeLocal(initialData.sale_end_date));
+      setMinimum(initialData.minimum || 1);
+      setMaximum(initialData.maximum || 1);
     }
   }, [initialData]);
 
+  const formatDateTimeLocal = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().slice(0, 16);
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!name) newErrors.name = 'Tên vé là bắt buộc';
+    if (!price || price <= 0) newErrors.price = 'Giá phải lớn hơn 0';
+    if (!eventId) newErrors.eventId = 'Sự kiện là bắt buộc';
+    if (!quantity || quantity <= 0) newErrors.quantity = 'Số lượng phải lớn hơn 0';
+    if (!openingDate) newErrors.openingDate = 'Ngày tạo là bắt buộc';
+    if (!saleEndDate) newErrors.saleEndDate = 'Ngày kết thúc là bắt buộc';
+    if (!minimum || minimum <= 0) newErrors.minimum = 'Số lượng tối thiểu phải lớn hơn 0';
+    if (!maximum || maximum <= 0) newErrors.maximum = 'Số lượng tối đa phải lớn hơn 0';
+    if (minimum > maximum)
+      newErrors.minimum = 'Số lượng tối thiểu phải nhỏ hơn hoặc bằng số lượng tối đa';
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = () => {
+    if (!validate()) return;
+
     const ticketData = {
-      id: initialData ? initialData.id : Math.random().toString(36).substr(2, 9),
       name,
       price: parseInt(price, 10),
       event_id: eventId,
       quantity: parseInt(quantity, 10),
-      minimum: 1,
-      maximum: 1,
+      minimum: parseInt(minimum, 10),
+      maximum: parseInt(maximum, 10),
       opening_date: new Date(openingDate).toISOString(),
       sale_end_date: new Date(saleEndDate).toISOString(),
       status: true,
       event: {
-        name: tickets.find((event) => event.event_id === eventId).event.name,
+        name: events.find((event) => event.id === eventId).name,
       },
     };
-    onSave(ticketData);
-    onClose();
+    const { event, status, ...sendToServerData } = ticketData;
+
+    createTicket(sendToServerData).then((response) => {
+      if (response.data.message === 'Sự kiện đã có vé') {
+        toast.error('Sự kiện đã có vé');
+      } else {
+        toast.success('Tạo vé thành công');
+        onSave(ticketData);
+        onClose();
+      }
+    });
   };
 
   return (
@@ -66,6 +107,8 @@ export default function TicketDialog({ open, onClose, onSave, initialData }) {
           fullWidth
           value={name}
           onChange={(e) => setName(e.target.value)}
+          error={!!errors.name}
+          helperText={errors.name}
         />
         <TextField
           margin="dense"
@@ -74,16 +117,21 @@ export default function TicketDialog({ open, onClose, onSave, initialData }) {
           fullWidth
           value={price}
           onChange={(e) => setPrice(e.target.value)}
+          error={!!errors.price}
+          helperText={errors.price}
         />
-        <FormControl fullWidth margin="dense">
+        <FormControl fullWidth margin="dense" error={!!errors.eventId}>
           <InputLabel>Sự kiện</InputLabel>
           <Select value={eventId} onChange={(e) => setEventId(e.target.value)} label="Sự kiện">
-            {tickets.map((event) => (
-              <MenuItem key={event.event_id} value={event.event_id}>
-                {event.event.name}
-              </MenuItem>
-            ))}
+            {events
+              ? events.map((event) => (
+                  <MenuItem key={event.id} value={event.id}>
+                    {event.name}
+                  </MenuItem>
+                ))
+              : null}
           </Select>
+          {errors.eventId && <FormHelperText>{errors.eventId}</FormHelperText>}
         </FormControl>
         <TextField
           margin="dense"
@@ -92,6 +140,8 @@ export default function TicketDialog({ open, onClose, onSave, initialData }) {
           fullWidth
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
+          error={!!errors.quantity}
+          helperText={errors.quantity}
         />
         <TextField
           margin="dense"
@@ -103,6 +153,8 @@ export default function TicketDialog({ open, onClose, onSave, initialData }) {
           InputLabelProps={{
             shrink: true,
           }}
+          error={!!errors.openingDate}
+          helperText={errors.openingDate}
         />
         <TextField
           margin="dense"
@@ -114,6 +166,28 @@ export default function TicketDialog({ open, onClose, onSave, initialData }) {
           InputLabelProps={{
             shrink: true,
           }}
+          error={!!errors.saleEndDate}
+          helperText={errors.saleEndDate}
+        />
+        <TextField
+          margin="dense"
+          label="Số lượng tối thiểu"
+          type="number"
+          fullWidth
+          value={minimum}
+          onChange={(e) => setMinimum(e.target.value)}
+          error={!!errors.minimum}
+          helperText={errors.minimum}
+        />
+        <TextField
+          margin="dense"
+          label="Số lượng tối đa"
+          type="number"
+          fullWidth
+          value={maximum}
+          onChange={(e) => setMaximum(e.target.value)}
+          error={!!errors.maximum}
+          helperText={errors.maximum}
         />
       </DialogContent>
       <DialogActions>
@@ -131,4 +205,5 @@ TicketDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   initialData: PropTypes.object,
+  events: PropTypes.array.isRequired,
 };
