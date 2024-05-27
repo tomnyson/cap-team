@@ -96,7 +96,7 @@ export default function AreasDialog({ open, onClose, onSave, initialData }) {
         />
       <TextField
           margin='dense'
-          label='Mô tả'
+          label='Mô tả...'
           multiline
           rows={4} // Số dòng mặc định bạn muốn hiển thị
           fullWidth
