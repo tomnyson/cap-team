@@ -165,8 +165,6 @@ const login = async ({ email, password }, res) => {
         const account = await Account.findOne({
             where: { email },
 
-
-            
         });
         if (!account.status === true) {
             return res.status(404).json({ message: "Account has been locked" });
