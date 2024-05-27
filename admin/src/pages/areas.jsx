@@ -1,16 +1,16 @@
 import { Helmet } from 'react-helmet-async';
 
-import { RegisterView } from 'src/sections/register';
+import AreasView from 'src/sections/areas/view/areas-view';
+
 // ----------------------------------------------------------------------
 
-export default function registerPage() {
+export default function TicketsPage() {
   return (
     <>
       <Helmet>
-        <title> Đăng ký Tài khoản </title>
+        <title> Areas </title>
       </Helmet>
-
-      <RegisterView />
+      <AreasView />
     </>
   );
 }
