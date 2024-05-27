@@ -37,6 +37,11 @@ const navConfig = [
     path: '/tickets',
     icon: icon('ic_lock'),
   },
+   {
+    title: 'areas',
+    path: '/areas',
+    icon: icon('ic_lock'),
+  },
   {
     title: 'Not found',
     path: '/404',
