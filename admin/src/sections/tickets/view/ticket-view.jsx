@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -10,6 +10,8 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
+import { getAllTicket } from 'src/apis/ticket';
+import { getAllEventByEmail } from 'src/apis/event';
 import { tickets as initialTickets } from 'src/_mock/tickets';
 
 import Iconify from 'src/components/iconify';
@@ -32,6 +34,17 @@ export default function TicketView() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openDialog, setOpenDialog] = useState(false);
+  const [events, setEvent] = useState([]);
+  console.log('🚀 ~ TicketView ~ events:', events);
+
+  useEffect(() => {
+    getAllTicket().then((res) => {
+      setTickets(res.data.ticket);
+    });
+    getAllEventByEmail('hptprobook@gmail.com').then((res) => {
+      setEvent(res.data);
+    });
+  }, []);
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -157,6 +170,7 @@ export default function TicketView() {
                       name={row.name}
                       price={row.price}
                       event={row.event.name}
+                      events={events}
                       quantity={row.quantity}
                       opening_date={row.opening_date}
                       sale_end_date={row.sale_end_date}
@@ -189,7 +203,12 @@ export default function TicketView() {
         />
       </Card>
 
-      <TicketDialog open={openDialog} onClose={handleCloseDialog} onSave={handleCreateTicket} />
+      <TicketDialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        onSave={handleCreateTicket}
+        events={events}
+      />
     </Container>
   );
 }

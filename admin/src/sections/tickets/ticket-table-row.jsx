@@ -22,6 +22,7 @@ export default function TicketTableRow({
   status,
   handleClick,
   onEdit,
+  events, // Thêm prop events
 }) {
   const [open, setOpen] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -42,6 +43,8 @@ export default function TicketTableRow({
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
+
+  const currentEvent = events?.find((e) => e.name === event) || {};
 
   return (
     <>
@@ -90,11 +93,12 @@ export default function TicketTableRow({
           id: name,
           name,
           price,
-          event_id: event,
+          event_id: currentEvent.id,
           quantity,
           opening_date,
           sale_end_date,
         }}
+        events={events}
       />
     </>
   );
@@ -111,4 +115,5 @@ TicketTableRow.propTypes = {
   status: PropTypes.bool,
   handleClick: PropTypes.func,
   onEdit: PropTypes.func,
+  events: PropTypes.array.isRequired,
 };
