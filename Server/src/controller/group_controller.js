@@ -18,7 +18,7 @@ const createGroup= async (req, res) => {
         if(!group){
             res.status(300).json({message: "Tạo group thất bại"});
         }else
-        res.status(200).json({message : "Tạo group thành công"})
+        res.status(200).json({message : "Tạo group thành công", data: {id: id, name}})
 
     } catch (error) {
         console.error('error in controller', error);

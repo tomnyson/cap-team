@@ -25,7 +25,7 @@ const createEvent= async (req, res) => {
         }
         const event = await EventService.createEvent(id, name, user_id, group_id, start_date, end_date, description, event_type, location, is_ticket, status);
         
-        res.status(200).json({message : "Tạo event thành công"});
+        res.status(200).json({message : "Tạo event thành công", data: id});
         
 
     } catch (error) {
