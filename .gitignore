@@ -2,4 +2,3 @@ node_modules
 DATABASE.db
 .DS_Store
 Server/src/database/DATABASE.sqbpro
-admin/yarn.lock
