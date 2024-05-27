@@ -10,29 +10,31 @@ import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
+
 import { useRouter } from 'src/routes/hooks';
+
 import { bgGradient } from 'src/theme/css';
+
 import Iconify from 'src/components/iconify';
 import { useForm, Controller } from 'react-hook-form';
 import { useToast } from '../../context/ToastContext';
 import authServices from '../../services/auth.services';
 // ----------------------------------------------------------------------
 
-export default function LoginView() {
+export default function ForgotView() {
   const theme = useTheme();
 
   const router = useRouter();
   const { handleSubmit, control, formState: { errors } } = useForm();
   const { showToast } = useToast();
-  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data) => {
     try {
-      await authServices.login(data);
-      showToast('This is a success message!', 'success');
-      router.push('/dashboard');
+      await authServices.ForgotPassword(data);
+      showToast('kiểm tra email của bạn', 'success');
+      // Redirect or show success message
     } catch (error) {
-      showToast(error.message, 'error');
+      console.error('Gửi mail thất bại', error.message);
     }
   };
 
@@ -55,48 +57,22 @@ export default function LoginView() {
             />
           )}
         />
-        <Controller
-          name="password"
-          control={control}
-          defaultValue=""
-          rules={{ required: 'Mật khẩu is required', minLength: { value: 6, message: 'Mật khẩu ít nhất 6 số' } }}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              fullWidth
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              error={!!errors.password}
-              helperText={errors.password ? errors.password.message : ''}
-              sx={{ marginBottom: 3 }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                      <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          )}
-        />
       </Stack>
-
       <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
-        <Link onClick={() => router.push('/forgot-password')} variant="subtitle2" underline="hover">
-          Quên mật khẩu
+        <Link onClick={() => router.push('/confirm-otp')} variant="subtitle2" underline="hover" sx={{ cursor: 'pointer' }}>
+          Xác Nhận OTP
         </Link>
       </Stack>
 
       <LoadingButton
+        sx={{ marginTop: 3 }}
         fullWidth
         size="large"
         type="submit"
         variant="contained"
         color="primary"
       >
-        Login
+        Gửi Email
       </LoadingButton>
     </form>
   );
@@ -120,12 +96,12 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Đăng Nhập</Typography>
+          <Typography variant="h4">Quên Mật Khẩu</Typography>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
-            Chưa có tài khoản?
-            <Link onClick={() => router.push('/register')} variant="subtitle2" sx={{ ml: 0.5, cursor: 'pointer' }}>
-              Đăng ký
+            Đã Nhờ tài khoản?
+            <Link onClick={() => router.push('/login')} variant="subtitle2" sx={{ ml: 0.5, cursor: 'pointer' }}>
+              Đăng nhập
             </Link>
           </Typography>
           {renderForm}

@@ -1,16 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { RegisterView } from 'src/sections/register';
+import { VerifyEmailView } from 'src/sections/verify-email';
+
 // ----------------------------------------------------------------------
 
-export default function registerPage() {
+export default function VerifyEmailPage() {
   return (
     <>
       <Helmet>
-        <title> Đăng ký Tài khoản </title>
+        <title> Login | Minimal UI </title>
       </Helmet>
 
-      <RegisterView />
+      <VerifyEmailView />
     </>
   );
 }

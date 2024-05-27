@@ -1,16 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { RegisterView } from 'src/sections/register';
+import { ForgotView } from 'src/sections/forgot';
+
 // ----------------------------------------------------------------------
 
-export default function registerPage() {
+export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title> Đăng ký Tài khoản </title>
+        <title> Quên mật khẩu</title>
       </Helmet>
 
-      <RegisterView />
+      <ForgotView />
     </>
   );
 }
