@@ -1,12 +1,11 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 require('dotenv').config();
-const routes = require("./src/routes");
+const routes = require('./src/routes');
 //const connection = require('./src/config/connect_db');
-
 
 const port = process.env.PORT;
 const hostname = process.env.HOST_NAME;
@@ -24,7 +23,7 @@ app.use(
   cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
-  }),
+  })
 );
 
 // db.Roles.create({
