@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -11,7 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
 import { users } from 'src/_mock/user';
-
+import axios from 'axios';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
@@ -21,6 +21,7 @@ import UserTableHead from '../user-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
+import handleRequest from "../../../api/request";
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +45,22 @@ export default function UserPage() {
       setOrderBy(id);
     }
   };
-
+  useEffect(() => {
+    // handleRequest('get', '/getUserbyEmail?email=thien999@gmail.com').then((res) => {
+    //   console.log(res.data);
+    // });
+      axios.get(`${import.meta.env.VITE_API_ROOT}/getUserbyEmail`, {
+          params: { email: 'thien999@gmail.com' },
+          headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`, // Replace with your actual token if needed
+              'Content-Type': 'application/json',
+          }
+      }).then((res) => {
+          console.log(res.data);
+      }).catch((error) => {
+          console.error('Error fetching user data:', error);
+      });
+  }, []);
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = users.map((n) => n.name);
