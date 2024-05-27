@@ -50,14 +50,8 @@ const register = async (req, res) => {
 const registerOTP = async (req, res) => {
     try {
         // Validate data
-
         const { email, password, phone_number , name, address, gender } = req.body;
-
-        
-       
-
-            const accountData = { email, password, phone_number , name, address, gender}
-
+        const accountData = { email, password, phone_number , name, address, gender}
         const response = await authServices.registerAndSendOTP(accountData, res);
 
         return response
@@ -94,8 +88,6 @@ const login = async (req, res) => {
     console.log(req.body.email);
     try {
         // Validate data
-        
-        
         const response = await authServices.login(req.body, res);
         return response;
     } catch (error) {
