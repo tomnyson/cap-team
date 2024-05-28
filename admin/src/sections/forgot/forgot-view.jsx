@@ -32,6 +32,7 @@ export default function ForgotView() {
     try {
       await authServices.ForgotPassword(data);
       showToast('kiểm tra email của bạn', 'success');
+      router.push('/confirm-otp')
       // Redirect or show success message
     } catch (error) {
       console.error('Gửi mail thất bại', error.message);

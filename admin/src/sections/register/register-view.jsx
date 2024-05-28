@@ -37,7 +37,7 @@ export default function RegisterView() {
     try {
       await authServices.register(data);
       showToast('Đăng ký tài khoản thành công kiểm tra email của bạn', 'success');
-      router.push(`/verify-account?email=${email}`);
+      router.push(`/verify-email?email=${email}`);
       // Redirect or show success message
     } catch (error) {
       showToast(error.message, 'error');
