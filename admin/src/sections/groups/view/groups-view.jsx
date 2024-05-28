@@ -20,6 +20,7 @@ import GroupsTableRow from '../groups-table-row';
 import TableEmptyRows from '../groups-empty-rows';
 import GroupsTableHead from '../groups-table-head';
 import GroupsTableToolbar from '../groups-table-toolbar';
+import groupServices from 'src/services/group.services';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import groupService from 'src/services/group.services';
 import { useAuth } from 'src/context/AuthContext';
@@ -54,6 +55,22 @@ export default function AreasView() {
       fetchGroups();
     }
   }, [currentUser]);
+
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  
+  useEffect(() => {
+    const fetchgroups = async () => {
+      try {
+        const response = await groupServices.getAllGroupByUserId({ user_id : currentUser.id });
+        setGroups(response);
+      } catch (error) {
+        throw new Error(error.response ? error.response.data.message : error.message);
+      }
+    };
+
+
+    fetchgroups();
+  })
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
