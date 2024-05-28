@@ -166,11 +166,11 @@ export default function EventPage() {
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'start_date', label: 'Start Date' },
-                  { id: 'end_date', label: 'End Date' },
-                  { id: 'event_type', label: 'Event Type', align: 'center' },
-                  { id: 'status', label: 'Status' },
+                  { id: 'name', label: 'Tên sự kiên' },
+                  { id: 'start_date', label: 'Ngày bắt đầu' },
+                  { id: 'end_date', label: 'Ngày kết thúc' },
+                  { id: 'event_type', label: 'Loại', align: 'center' },
+                  { id: 'status', label: 'Trạng thái' },
                   { id: '' },
                 ]}
               />
