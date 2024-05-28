@@ -56,7 +56,6 @@ export default function AreasView() {
     }
   }, [currentUser]);
 
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   
   useEffect(() => {
     const fetchgroups = async () => {
