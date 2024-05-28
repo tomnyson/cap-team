@@ -18,7 +18,7 @@ api.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const { data } = await api.post(API_USER_REFRESH_TOKEN, {refreshToken: localStorage.get('authToken') || null});
+        const { data } = await api.post(API_USER_REFRESH_TOKEN, {refreshToken: localStorage.getItem('authToken') || null});
         console.log('call fresh token')
         console.log(data);
         api.defaults.headers.common['Authorization'] = `Bearer ${data.newAccessToken}`;

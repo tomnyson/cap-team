@@ -24,7 +24,7 @@ import TableEmptyRows from '../table-empty-rows';
 import AreasTableHead from '../areas-table-head';
 import AreasTableToolbar from '../areas-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-
+import { useAuth } from 'src/context/AuthContext';
 import { Select, MenuItem, InputLabel, FormControl, Box } from '@mui/material';
 
 export default function AreasView() {
@@ -37,9 +37,11 @@ export default function AreasView() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openDialog, setOpenDialog] = useState(false);
   const [events, setEvent] = useState([]);
+  const { user, logout, getUserInfo } = useAuth();
+  const currentUser = getUserInfo()
 
   useEffect(() => {
-    getAllEventByEmail('hptprobook@gmail.com').then((res) => {
+    getAllEventByEmail(currentUser.email).then((res) => {
       setEvent(res.data);
     });
   }, []);
