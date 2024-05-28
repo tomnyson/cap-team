@@ -22,12 +22,13 @@ import Scrollbar from 'src/components/scrollbar';
 
 import { NAV } from './config-layout';
 import navConfig from './config-navigation';
-
+import { useAuth } from 'src/context/AuthContext';
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
-
+  const { getUserInfo } = useAuth()
+  const currentUser = getUserInfo()
   const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -52,10 +53,10 @@ export default function Nav({ openNav, onCloseNav }) {
       <Avatar src={account.photoURL} alt="photoURL" />
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{account.displayName}</Typography>
+        <Typography variant="subtitle2">{currentUser?.name}</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {account.role}
+          {currentUser?.Account?.name}
         </Typography>
       </Box>
     </Box>

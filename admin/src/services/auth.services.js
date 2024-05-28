@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_USER_REGISTER, API_USER_LOGIN, API_USER_FORGOT_PASSWORD, API_USER_CONFIRM_OTP, API_USER_VERIFY_EMAIL } from './const.js';
+import { API_USER_REGISTER, API_USER_LOGIN, API_USER_FORGOT_PASSWORD, API_USER_CONFIRM_OTP, API_USER_VERIFY_EMAIL, API_USER_INFO_BY_EMAIL } from './const.js';
 
 const authServices = {
     login: async ({ email, password }) => {
@@ -10,7 +10,27 @@ const authServices = {
             }
             const { accessToken, role } = response.data;
             localStorage.setItem('authToken', accessToken);
-            localStorage.setItem('currentUser', JSON.stringify(role));
+            // set info of current user
+            const currentUser = await authServices.getInfoUserByEmail({email});
+            console.log(currentUser);
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        } catch (error) {
+            throw new Error(error.response ? error.response.data.message : error.message);
+        }
+    },
+    getInfoUserByEmail: async ({ email }) => {
+        try {
+            const response = await axios.get(`${API_USER_INFO_BY_EMAIL}?email=${email}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                },
+            
+            });
+            if (response.status < 200 || response.status >= 300) {
+                throw new Error(response.statusText);
+            }
+            const users = response.data;
+            return users
         } catch (error) {
             throw new Error(error.response ? error.response.data.message : error.message);
         }

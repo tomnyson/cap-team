@@ -29,7 +29,7 @@ export default function LoginView() {
   const onSubmit = async (data) => {
     try {
       await authServices.login(data);
-      showToast('This is a success message!', 'success');
+      showToast('Đăng nhập thành công', 'success');
       router.push('/dashboard');
     } catch (error) {
       showToast(error.message, 'error');
