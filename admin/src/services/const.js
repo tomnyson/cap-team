@@ -1,4 +1,4 @@
-export const API  = import.meta.env.VITE_API
+export const API  = "https://api.ptepathway.com"
 
 const API_PATH = `${API}/api`
 export const API_USER_REGISTER = `${API_PATH}/auth/registerOTP`
