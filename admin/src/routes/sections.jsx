@@ -36,9 +36,7 @@ export default function Router() {
         </DashboardLayout>
       ),
       children: [
-        { path: '/', element: <IndexPage /> },
-        { path: 'dashboard', element: <IndexPage /> },
-        { path: 'user', element: <UserPage /> },
+        { path: '/', element: <EventPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'tickets', element: <TicketsPage /> },
         { path: 'blog', element: <BlogPage /> },
