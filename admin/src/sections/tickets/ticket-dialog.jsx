@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import React, { useState, useEffect } from 'react';
+import ticketServices from 'src/services/ticket.services';
 
 import {
   Dialog,
@@ -16,8 +17,6 @@ import {
   FormHelperText,
 } from '@mui/material';
 
-import { createTicket } from 'src/apis/ticket';
-
 export default function TicketDialog({ open, onClose, onSave, initialData, events }) {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -28,6 +27,16 @@ export default function TicketDialog({ open, onClose, onSave, initialData, event
   const [minimum, setMinimum] = useState(1);
   const [maximum, setMaximum] = useState(1);
   const [errors, setErrors] = useState({});
+
+  const formatDateTimeLocal = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  };
 
   useEffect(() => {
     if (initialData) {
@@ -42,10 +51,10 @@ export default function TicketDialog({ open, onClose, onSave, initialData, event
     }
   }, [initialData]);
 
-  const formatDateTimeLocal = (dateString) => {
-    const date = new Date(dateString);
-    return date.toISOString().slice(0, 16);
-  };
+  // const formatDateTimeLocal = (dateString) => {
+  //   const date = new Date(dateString);
+  //   return date.toISOString().slice(0, 16);
+  // };
 
   const validate = () => {
     const newErrors = {};
@@ -66,7 +75,7 @@ export default function TicketDialog({ open, onClose, onSave, initialData, event
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validate()) return;
 
     const ticketData = {
@@ -76,24 +85,51 @@ export default function TicketDialog({ open, onClose, onSave, initialData, event
       quantity: parseInt(quantity, 10),
       minimum: parseInt(minimum, 10),
       maximum: parseInt(maximum, 10),
-      opening_date: new Date(openingDate).toISOString(),
-      sale_end_date: new Date(saleEndDate).toISOString(),
-      status: true,
-      event: {
-        name: events.find((event) => event.id === eventId).name,
-      },
+      opening_date: openingDate,
+      sale_end_date: saleEndDate,
     };
-    const { event, status, ...sendToServerData } = ticketData;
 
-    createTicket(sendToServerData).then((response) => {
-      if (response.data.message === 'Sự kiện đã có vé') {
-        toast.error('Sự kiện đã có vé');
+    try {
+      const response = await ticketServices.createTicket(ticketData);
+      if (response.message !== 'Tạo vé thành công') {
+        toast.error(response.message);
       } else {
         toast.success('Tạo vé thành công');
         onSave(ticketData);
         onClose();
       }
-    });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!validate()) return;
+
+    const ticketData = {
+      id: initialData.id,
+      name,
+      price: parseInt(price, 10),
+      event_id: eventId,
+      quantity: parseInt(quantity, 10),
+      minimum: parseInt(minimum, 10),
+      maximum: parseInt(maximum, 10),
+      opening_date: new Date(openingDate).toISOString(),
+      sale_end_date: new Date(saleEndDate).toISOString(),
+    };
+
+    try {
+      const response = await ticketServices.updateTicket(ticketData);
+      if (response.message !== 'Cập nhật vé thành công') {
+        toast.error(response.message);
+      } else {
+        toast.success('Cập nhật vé thành công');
+        onSave(ticketData);
+        onClose();
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -192,9 +228,19 @@ export default function TicketDialog({ open, onClose, onSave, initialData, event
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Hủy</Button>
-        <Button onClick={handleSubmit} color="primary">
-          {initialData ? 'Lưu' : 'Tạo'}
-        </Button>
+        {initialData ? (
+          <>
+            <Button onClick={handleUpdate} color="primary">
+              Lưu
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button onClick={handleSubmit} color="primary">
+              Tạo
+            </Button>
+          </>
+        )}
       </DialogActions>
     </Dialog>
   );

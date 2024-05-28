@@ -9,10 +9,13 @@ import { Popover, MenuItem } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
 
-import TicketDialog from './ticket-dialog'; // Chuyển đổi CreateTicketDialog thành TicketDialog
+import TicketDialog from './ticket-dialog';
+import ticketServices from 'src/services/ticket.services';
+import { toast } from 'react-toastify';
 
 export default function TicketTableRow({
   selected,
+  id,
   name,
   price,
   event,
@@ -22,7 +25,8 @@ export default function TicketTableRow({
   status,
   handleClick,
   onEdit,
-  events, // Thêm prop events
+  onDisable,
+  events,
 }) {
   const [open, setOpen] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -42,6 +46,21 @@ export default function TicketTableRow({
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+  };
+
+  const handleDisableTicket = async () => {
+    try {
+      const response = await ticketServices.disableTicket({ id });
+      if (response.message !== 'Vô hiệu hoá thành công') {
+        toast.error(response.message);
+      } else {
+        toast.success('Vô hiệu hoá thành công');
+        handleCloseMenu();
+        onDisable(id); // Notify the parent component
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const currentEvent = events?.find((e) => e.name === event) || {};
@@ -79,9 +98,9 @@ export default function TicketTableRow({
           Sửa
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleDisableTicket} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Xoá
+          Vô hiệu hoá
         </MenuItem>
       </Popover>
 
@@ -90,13 +109,14 @@ export default function TicketTableRow({
         onClose={handleCloseDialog}
         onSave={onEdit}
         initialData={{
-          id: name,
+          id,
           name,
           price,
           event_id: currentEvent.id,
           quantity,
           opening_date,
           sale_end_date,
+          event,
         }}
         events={events}
       />
@@ -106,6 +126,7 @@ export default function TicketTableRow({
 
 TicketTableRow.propTypes = {
   selected: PropTypes.bool,
+  id: PropTypes.string,
   name: PropTypes.string,
   price: PropTypes.number,
   event: PropTypes.string,
@@ -115,5 +136,6 @@ TicketTableRow.propTypes = {
   status: PropTypes.bool,
   handleClick: PropTypes.func,
   onEdit: PropTypes.func,
+  onDisable: PropTypes.func.isRequired, // Add the new prop here
   events: PropTypes.array.isRequired,
 };
