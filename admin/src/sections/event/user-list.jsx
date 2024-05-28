@@ -26,11 +26,11 @@ export default function UserListPanel({ users }) {
         </TableHead>
         <TableBody>
           {users.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>{user.name}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.address}</TableCell>
-              <TableCell>{user.gender}</TableCell>
+            <TableRow key={user?.id}>
+              <TableCell>{user?.name}</TableCell>
+              <TableCell>{user?.email}</TableCell>
+              <TableCell>{user?.address}</TableCell>
+              <TableCell>{user?.gender}</TableCell>
             </TableRow>
           ))}
         </TableBody>
