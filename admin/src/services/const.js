@@ -20,3 +20,8 @@ export const API_USER_VERIFY_EMAIL = `${API_PATH}/auth/confirmOtpRegisted`;
 export const API_USER_INFO_BY_EMAIL = `${API}/api/getUserbyEmail`;
 export const API_USER_REFRESH_TOKEN = '/api/auth/refresh-token';
 
+
+export const API_GET_USER_GROUP = `${API_PATH}/getAllUserByGroupId`
+export const API_GET_GROUP_BY_USER = `${API_PATH}/getAllGroupByUserId`
+export const API_CREATE_GROUP = `${API_PATH}/createGroup`
+export const API_DELETE_GROUP = `${API_PATH}/deleteGroup`
