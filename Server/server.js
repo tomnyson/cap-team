@@ -18,7 +18,7 @@ const hostname = process.env.HOST_NAME;
 const corsOptions = {
   origin: ['http://localhost:3030', 'https://event.ptepathway.com'], // URLs of your React apps
   credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods if needed
+  methods: ['GET', 'POST', 'PUT', 'DELETE', "PATCH"], // Allow specific HTTP methods if needed
   allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers if needed
 };
 
