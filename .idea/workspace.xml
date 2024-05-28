@@ -5,17 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="abd1ab49-a4d8-44f6-9afc-c49fc7cc65c0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/admin/src/pages/event-edit.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/src/sections/event/edit/event-edit-view.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/src/sections/event/edit/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/src/sections/event/event-edit-tab.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/src/services/event.services.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/apis/request.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/apis/request.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/routes/hooks/use-router.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/routes/hooks/use-router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/routes/sections.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/routes/sections.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/sections/event/add-event-modal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/sections/event/add-event-modal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/sections/event/event-table-row.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/sections/event/event-table-row.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/sections/event/view/event-view.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/sections/event/view/event-view.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/public/assets/icons/navbar/ic_area.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/public/assets/icons/navbar/ic_event.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/public/assets/icons/navbar/ic_group.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/public/assets/icons/navbar/ic_ticket.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/layouts/dashboard/config-navigation.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/layouts/dashboard/config-navigation.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/services/const.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/services/const.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +43,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "tin",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/project/cap-team/admin/src/sections/event",
+    "last_opened_file_path": "D:/project/cap-team/admin/public/assets/icons/navbar",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -67,6 +63,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\project\cap-team\admin\public\assets\icons\navbar" />
       <recent name="D:\project\cap-team\admin\src\sections\event" />
       <recent name="D:\project\cap-team\admin\src\pages" />
       <recent name="D:\project\cap-team\admin\src\services" />
@@ -87,7 +84,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1716860848422</updated>
-      <workItem from="1716860851436" duration="8673000" />
+      <workItem from="1716860851436" duration="9879000" />
     </task>
     <servers />
   </component>

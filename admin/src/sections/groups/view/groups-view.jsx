@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { groups as initialgroups } from 'src/_mock/groups';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -23,9 +22,10 @@ import GroupsTableHead from '../groups-table-head';
 import GroupsTableToolbar from '../groups-table-toolbar';
 import groupServices from 'src/services/group.services';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-
+import groupService from 'src/services/group.services';
+import { useAuth } from 'src/context/AuthContext';
+import { useToast } from 'src/context/ToastContext';
 export default function AreasView() {
-  const [groups, setGroups] = useState(initialgroups);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -33,6 +33,28 @@ export default function AreasView() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openDialog, setOpenDialog] = useState(false);
+  const { user, logout, getUserInfo } = useAuth();
+  const currentUser = getUserInfo()
+  const [groups, setGroups] = useState([])
+  const { showToast } = useToast();
+
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        console.log(currentUser);
+        const response = await groupService.getGroupByUserId({ user_id: currentUser.id });
+        console.log(response);
+        setGroups(response);
+      } catch (error) {
+        console.error('Error fetching groups:', error);
+      }
+    };
+
+    if (currentUser && currentUser.id) {
+      fetchGroups();
+    }
+  }, [currentUser]);
 
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   
@@ -55,6 +77,7 @@ export default function AreasView() {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(id);
   };
+
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -105,8 +128,17 @@ export default function AreasView() {
     setOpenDialog(false);
   };
 
-  const handleCreategroups = (newareas) => {
-    setGroups([newareas, ...groups]);
+  const handleCreategroups = async (newareas) => {
+    const create = await groupService.createGroup({
+      name: newareas.name,
+      user_id: currentUser.id
+    })
+    if (create) {
+      showToast('Tạo group thành công', 'success');
+      setGroups([create.data, ...groups]);
+    }
+
+
   };
 
   const handleEditgroups = (updatedgroups) => {
@@ -114,6 +146,21 @@ export default function AreasView() {
       prevareas.map((groups) => (groups.id === updatedgroups.id ? updatedgroups : groups))
     );
   };
+
+  const handleDelete = async (id) => {
+    console.log('group id: ' + id);
+    const create = await groupService.deleteGroup({
+      group_id: id
+    })
+    if (create) {
+      showToast('xóa group thành công', 'success');
+      setGroups((prevareas) =>
+        prevareas.map((groups) => (groups.id !== id))
+      );
+    }
+  };
+
+
 
   const dataFiltered = applyFilter({
     inputData: groups,
@@ -125,7 +172,7 @@ export default function AreasView() {
 
   return (
     <Container>
-    
+
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Nhóm</Typography>
         <Button
@@ -166,10 +213,12 @@ export default function AreasView() {
                   .map((row) => (
                     <GroupsTableRow
                       key={row.id}
+                      id={row.id}
                       name={row.name}
                       selected={selected.indexOf(row.name) !== -1}
                       handleClick={(event) => handleClick(event, row.name)}
                       onEdit={handleEditgroups}
+                      onDelete={handleDelete}
                     />
                   ))}
 

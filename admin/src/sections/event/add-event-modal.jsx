@@ -16,6 +16,7 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import handleRequest from 'src/apis/request';
 import { handleToast } from 'src/utils/toast';
+import { getCoordinates } from 'src/utils/const'
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
@@ -63,10 +64,12 @@ export default function AddEventModal({ open, onClose, onCreateEvent, groups }) 
       description: '',
     },
     validationSchema: eventShcema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       const userId = currentUser.id;
       values.user_id = userId;
+      values.location = await getCoordinates(values.location)
+      console.log(JSON.stringify(values))
       handleRequest('post', '/createEvent', values)
         .then((res) => {
           handleToast('success', res.data.message);
@@ -297,7 +300,7 @@ export default function AddEventModal({ open, onClose, onCreateEvent, groups }) 
                 name="description"
                 value={formik.values.description}
                 onChange={formik.handleChange}
-                // onBlur={formik.handleBlur}
+              // onBlur={formik.handleBlur}
               />
               {formik.touched.description && formik.errors.description && (
                 <p

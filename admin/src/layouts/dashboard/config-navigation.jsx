@@ -12,25 +12,30 @@ const navConfig = [
     path: '/',
     icon: icon('ic_analytics'),
   },
+  // {
+  //   title: 'user',
+  //   path: '/user',
+  //   icon: icon('ic_user'),
+  // },
   {
-    title: 'user',
-    path: '/user',
-    icon: icon('ic_user'),
+    title: 'Sự kiện',
+    path: '/events',
+    icon: icon('ic_event'),
   },
   {
     title: 'Group',
     path: '/group',
-    icon: icon('ic_lock'),
+    icon: icon('ic_group'),
   },
   {
     title: 'Vé',
     path: '/tickets',
-    icon: icon('ic_lock'),
+    icon: icon('ic_ticket'),
   },
   {
     title: 'Khu Vực',
     path: '/areas',
-    icon: icon('ic_lock'),
+    icon: icon('ic_area'),
   },
 ];
 
