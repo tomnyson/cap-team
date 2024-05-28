@@ -8,6 +8,7 @@ import { useFormik } from 'formik';
 import Button from "@mui/material/Button";
 import eventServices from "../../services/event.services";
 import { getCoordinates } from 'src/utils/const'
+import { handleToast } from 'src/utils/toast';
 
 const eventShcema = yup.object().shape({
   name: yup
@@ -53,17 +54,9 @@ export default function EditEventPanel({ onCreateEvent, groups, event }) {
       values.user_id = curentUser.id;
       values.id = event.id;
       values.location = await getCoordinates(values.location)
-      // handleRequest('post', '/createEvent', values)
-      //   .then((res) => {
-      //     handleToast('success', res.data.message);
-      //     formik.resetForm();
-      //     onCreateEvent(true);
-      //   })
-      //   .catch((err) => {
-      //     handleToast('error', err.response.data.message);
-      //   });
+      console.log(values)
       eventServices.update({ data: values }).then((res) => {
-        console.log(res)
+        handleToast('success', res.message);
       });
     },
   });
@@ -125,6 +118,7 @@ export default function EditEventPanel({ onCreateEvent, groups, event }) {
           <FormControl fullWidth>
             <InputLabel id="type-of-status">Trạng thái</InputLabel>
             <Select
+            disabled
               labelId="type-of-status"
               id="type-of-status-select"
               name="status"

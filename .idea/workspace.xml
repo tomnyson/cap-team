@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="abd1ab49-a4d8-44f6-9afc-c49fc7cc65c0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/admin/public/assets/icons/navbar/ic_area.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/public/assets/icons/navbar/ic_event.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/public/assets/icons/navbar/ic_group.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/public/assets/icons/navbar/ic_ticket.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/layouts/dashboard/config-navigation.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/layouts/dashboard/config-navigation.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/services/const.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/services/const.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/layouts/dashboard/nav.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/layouts/dashboard/nav.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/sections/event/view/event-view.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/sections/event/view/event-view.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,30 +24,30 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2h4kfOLvjjCcU4Giw93b6N9dDc2" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "tin",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/project/cap-team/admin/public/assets/icons/navbar",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.1.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;tin&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/project/cap-team/admin/public/assets/icons/navbar&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.1.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;
   }
-}]]></component>
+}</component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -84,7 +80,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1716860848422</updated>
-      <workItem from="1716860851436" duration="9879000" />
+      <workItem from="1716860851436" duration="10529000" />
+      <workItem from="1716877762305" duration="726000" />
     </task>
     <servers />
   </component>
@@ -96,8 +93,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/admin/src/sections/event/edit-event-panel.jsx</url>
-          <line>9</line>
-          <properties lambdaOrdinal="-1" />
+          <line>11</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
