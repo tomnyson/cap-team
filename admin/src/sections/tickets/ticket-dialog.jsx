@@ -85,8 +85,8 @@ export default function TicketDialog({ open, onClose, onSave, initialData, event
       quantity: parseInt(quantity, 10),
       minimum: parseInt(minimum, 10),
       maximum: parseInt(maximum, 10),
-      opening_date: openingDate,
-      sale_end_date: saleEndDate,
+      opening_date: new Date(openingDate).toISOString(),
+      sale_end_date: new Date(saleEndDate).toISOString(),
     };
 
     try {
@@ -116,10 +116,13 @@ export default function TicketDialog({ open, onClose, onSave, initialData, event
       maximum: parseInt(maximum, 10),
       opening_date: new Date(openingDate).toISOString(),
       sale_end_date: new Date(saleEndDate).toISOString(),
+      event: initialData.event,
     };
 
+    const { event, ...data } = ticketData;
+
     try {
-      const response = await ticketServices.updateTicket(ticketData);
+      const response = await ticketServices.updateTicket(data);
       if (response.message !== 'Cập nhật vé thành công') {
         toast.error(response.message);
       } else {
