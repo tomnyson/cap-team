@@ -4,6 +4,7 @@ import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 import TicketsPage from 'src/pages/tickets';
 import DashboardLayout from 'src/layouts/dashboard';
 export const EventPage = lazy(() => import('src/pages/event'));
+export const EventEditPage = lazy(() => import('src/pages/event-edit'));
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
@@ -43,6 +44,7 @@ export default function Router() {
         { path: 'blog', element: <BlogPage /> },
         { path: 'areas', element: <AreasPage /> },
         { path: 'events', element: <EventPage /> },
+        { path: 'events/:id', element: <EventEditPage /> },
         { path: 'group', element: <GroupsPage /> },
       ],
     },
