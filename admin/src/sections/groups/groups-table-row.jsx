@@ -9,12 +9,14 @@ import { Popover, MenuItem } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
 
-import GroupsDialog from './groups-dialog';  
+import GroupsDialog from './groups-dialog';
 
 export default function GroupsTableRow({
   selected,
   name,
+  id,
   handleClick,
+  onDelete,
   onEdit,
 }) {
   const [open, setOpen] = useState(null);
@@ -65,7 +67,10 @@ export default function GroupsTableRow({
           Sửa
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={() => {
+          onDelete(id)
+          handleCloseMenu()
+        }} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Xoá
         </MenuItem>
