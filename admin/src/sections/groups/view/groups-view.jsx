@@ -1,61 +1,183 @@
-import { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+
+import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
+import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
+import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { Stack } from '@mui/material';
+import TableContainer from '@mui/material/TableContainer';
+import TablePagination from '@mui/material/TablePagination';
 
-export default function GroupsView() {
-    const [groupName, setGroupName] = useState('');
+import { groups as initialgroups } from 'src/_mock/groups';
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+import Iconify from 'src/components/iconify';
+import Scrollbar from 'src/components/scrollbar';
 
-        try {
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRoaWVuOTk5QGdtYWlsLmNvbSIsImlhdCI6MTcxNjgyNjMxNywiZXhwIjoxNzE2OTk5MTE3fQ.79tZJ1voY8Xq0v7jBFbziHwe7uVPlms31AlX4k8X6_M";
-            const response = await axios.post('https://api.ptepathway.com/api/createGroup', {
-                name: groupName,
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}` // replace `token` with your actual token
-                }
-            });
+import TableNoData from '../table-no-data';
+import GroupsDialog from '../groups-dialog';
+import GroupsTableRow from '../groups-table-row';
+import TableEmptyRows from '../groups-empty-rows';
+import GroupsTableHead from '../groups-table-head';
+import GroupsTableToolbar from '../groups-table-toolbar';
+import { emptyRows, applyFilter, getComparator } from '../utils';
 
-            console.log(response.data);
-        } catch (error) {
-            console.error('There was an error!', error);
-        }
-    };
+export default function AreasView() {
+  const [groups, setGroups] = useState(initialgroups);
+  const [page, setPage] = useState(0);
+  const [order, setOrder] = useState('asc');
+  const [selected, setSelected] = useState([]);
+  const [orderBy, setOrderBy] = useState('name');
+  const [filterName, setFilterName] = useState('');
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [openDialog, setOpenDialog] = useState(false);
 
-    return (
-        <Container>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-                <Typography variant="h4" sx={{ mb: 5 }}>
-                    Tạo nhóm
-                </Typography>
+  const handleSort = (event, id) => {
+    const isAsc = orderBy === id && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(id);
+  };
 
-            </Stack>
-            <Box
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="center"
-            >
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = groups.map((n) => n.name);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
 
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <TextField
-                        label="Tên nhóm"
-                        value={groupName}
-                        onChange={(e) => setGroupName(e.target.value)}
-                        required
-                    />
-                    <Box mt={2}>
-                        <Button type="submit">Tạo nhóm</Button>
-                    </Box>
-                </form>
-            </Box>
-        </Container>
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+    setSelected(newSelected);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setPage(0);
+    setRowsPerPage(parseInt(event.target.value, 10));
+  };
+
+  const handleFilterByName = (event) => {
+    setPage(0);
+    setFilterName(event.target.value);
+  };
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleCreategroups = (newareas) => {
+    setGroups([newareas, ...groups]);
+  };
+
+  const handleEditgroups = (updatedgroups) => {
+    setGroups((prevareas) =>
+      prevareas.map((groups) => (groups.id === updatedgroups.id ? updatedgroups : groups))
     );
+  };
+
+  const dataFiltered = applyFilter({
+    inputData: groups,
+    comparator: getComparator(order, orderBy),
+    filterName,
+  });
+
+  const notFound = !dataFiltered.length && !!filterName;
+
+  return (
+    <Container>
+    
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Typography variant="h4">Nhóm</Typography>
+        <Button
+          variant="contained"
+          color="inherit"
+          startIcon={<Iconify icon="eva:plus-fill" />}
+          onClick={handleOpenDialog}
+        >
+          Thêm nhóm
+        </Button>
+      </Stack>
+
+      <Card>
+        <GroupsTableToolbar
+          numSelected={selected.length}
+          filterName={filterName}
+          onFilterName={handleFilterByName}
+        />
+
+        <Scrollbar>
+          <TableContainer sx={{ overflow: 'unset' }}>
+            <Table sx={{ minWidth: 800 }}>
+              <GroupsTableHead
+                order={order}
+                orderBy={orderBy}
+                rowCount={groups.length}
+                numSelected={selected.length}
+                onRequestSort={handleSort}
+                onSelectAllClick={handleSelectAllClick}
+                headLabel={[
+                  { id: 'name', label: 'Tên Nhóm' },
+                  { id: '' },
+                ]}
+              />
+              <TableBody>
+                {dataFiltered
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => (
+                    <GroupsTableRow
+                      key={row.id}
+                      name={row.name}
+                      selected={selected.indexOf(row.name) !== -1}
+                      handleClick={(event) => handleClick(event, row.name)}
+                      onEdit={handleEditgroups}
+                    />
+                  ))}
+
+                <TableEmptyRows
+                  height={77}
+                  emptyRows={emptyRows(page, rowsPerPage, groups.length)}
+                />
+                {notFound && <TableNoData query={filterName} />}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Scrollbar>
+
+        <TablePagination
+          page={page}
+          component="div"
+          count={groups.length}
+          rowsPerPage={rowsPerPage}
+          onPageChange={handleChangePage}
+          rowsPerPageOptions={[5, 10, 25]}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Card>
+
+      <GroupsDialog open={openDialog} onClose={handleCloseDialog} onSave={handleCreategroups} />
+    </Container>
+  );
 }
