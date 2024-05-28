@@ -46,6 +46,7 @@ export default function AreasTableRow({
     console.log(id);
     const del = await deleteArea(id);
     console.log(del);
+    // load();
   };
   return (
     <>
