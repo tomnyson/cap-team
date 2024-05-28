@@ -191,7 +191,7 @@ export default function AddEventModal({ open, onClose, onCreateEvent, groups }) 
                   onBlur={formik.handleBlur}
                 >
                   {groups.length > 0 ? (
-                    groups.map((group) => (
+                    groups?.map((group) => (
                       <MenuItem key={group.id} value={group.id}>
                         {group.name}
                       </MenuItem>

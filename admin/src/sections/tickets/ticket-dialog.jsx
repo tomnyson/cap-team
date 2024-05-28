@@ -60,15 +60,21 @@ export default function TicketDialog({ open, onClose, onSave, initialData, event
     const newErrors = {};
 
     if (!name) newErrors.name = 'Tên vé là bắt buộc';
-    if (!price || price <= 0) newErrors.price = 'Giá phải lớn hơn 0';
+    if (!price || price <= 0 || !Number.isInteger(Number(price)))
+      newErrors.price = 'Giá phải là số nguyên dương';
     if (!eventId) newErrors.eventId = 'Sự kiện là bắt buộc';
-    if (!quantity || quantity <= 0) newErrors.quantity = 'Số lượng phải lớn hơn 0';
+    if (!quantity || quantity <= 0 || !Number.isInteger(Number(quantity)))
+      newErrors.quantity = 'Số lượng phải là số nguyên dương';
     if (!openingDate) newErrors.openingDate = 'Ngày tạo là bắt buộc';
     if (!saleEndDate) newErrors.saleEndDate = 'Ngày kết thúc là bắt buộc';
-    if (!minimum || minimum <= 0) newErrors.minimum = 'Số lượng tối thiểu phải lớn hơn 0';
-    if (!maximum || maximum <= 0) newErrors.maximum = 'Số lượng tối đa phải lớn hơn 0';
+    if (!minimum || minimum <= 0 || !Number.isInteger(Number(minimum)))
+      newErrors.minimum = 'Số lượng tối thiểu phải là số nguyên dương';
+    if (!maximum || maximum <= 0 || !Number.isInteger(Number(maximum)))
+      newErrors.maximum = 'Số lượng tối đa phải là số nguyên dương';
     if (minimum > maximum)
       newErrors.minimum = 'Số lượng tối thiểu phải nhỏ hơn hoặc bằng số lượng tối đa';
+    if (new Date(openingDate) >= new Date(saleEndDate))
+      newErrors.openingDate = 'Ngày mở bán phải nhỏ hơn ngày kết thúc';
 
     setErrors(newErrors);
 
