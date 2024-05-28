@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { GroupsView, GroupsListView ,GroupsAddMember } from '../sections/groups/view';
+import { GroupsView } from '../sections/groups/view';
 // ----------------------------------------------------------------------
 
 export default function GroupsPage() {
@@ -11,8 +11,6 @@ export default function GroupsPage() {
       </Helmet>
 
         <GroupsView />
-        <GroupsAddMember />
-        <GroupsListView />
     </>
   );
 }

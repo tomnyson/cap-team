@@ -10,10 +10,7 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { getAllTicket } from 'src/apis/ticket';
-import { getAllEventByEmail } from 'src/apis/event';
-import { tickets as initialTickets } from 'src/_mock/tickets';
-
+import ticketServices from 'src/services/ticket.services';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
@@ -26,7 +23,7 @@ import TicketTableToolbar from '../ticket-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
 export default function TicketView() {
-  const [tickets, setTickets] = useState(initialTickets);
+  const [tickets, setTickets] = useState([]);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -37,14 +34,33 @@ export default function TicketView() {
   const [events, setEvent] = useState([]);
   console.log('🚀 ~ TicketView ~ events:', events);
 
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
   useEffect(() => {
-    getAllTicket().then((res) => {
-      setTickets(res.data.ticket);
-    });
-    getAllEventByEmail('hptprobook@gmail.com').then((res) => {
-      setEvent(res.data);
-    });
+    const fetchTickets = async () => {
+      try {
+        const response = await ticketServices.getAllTicket();
+        setTickets(response.ticket);
+      } catch (error) {
+        console.error('Failed to fetch tickets:', error.message);
+      }
+    };
+
+    const fetchEvents = async () => {
+      try {
+        const response = await ticketServices.getAllEventByEmail(currentUser.email);
+        setEvent(response);
+      } catch (error) {
+        console.error('Failed to fetch events:', error.message);
+      }
+    };
+    fetchTickets();
+    fetchEvents();
   }, []);
+
+  const handleDisableTicket = (id) => {
+    setTickets((prevTickets) => prevTickets.filter((ticket) => ticket.id !== id));
+  };
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -167,6 +183,7 @@ export default function TicketView() {
                   .map((row) => (
                     <TicketTableRow
                       key={row.id}
+                      id={row.id}
                       name={row.name}
                       price={row.price}
                       event={row.event.name}
@@ -178,6 +195,7 @@ export default function TicketView() {
                       selected={selected.indexOf(row.name) !== -1}
                       handleClick={(event) => handleClick(event, row.name)}
                       onEdit={handleEditTicket}
+                      onDisable={handleDisableTicket}
                     />
                   ))}
 

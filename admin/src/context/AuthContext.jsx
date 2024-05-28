@@ -11,10 +11,12 @@ export const AuthProvider = ({ children }) => {
     });
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('currentUser');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
+        setTimeout(() => {
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                setUser(JSON.parse(storedUser));
+            }
+        }, 500)
     }, []);
 
     const login = (userData) => {
@@ -25,10 +27,12 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         setUser(null);
         localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+
     };
 
     const isAuthenticated = () => {
-        return user !== null;
+        return localStorage.getItem('currentUser') !== null;
     };
 
     const getUserInfo = () => {

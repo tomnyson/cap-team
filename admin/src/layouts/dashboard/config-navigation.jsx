@@ -20,7 +20,7 @@ const navConfig = [
   {
     title: 'Group',
     path: '/group',
-    icon: icon('ic_user'),
+    icon: icon('ic_lock'),
   },
   {
     title: 'Vé',

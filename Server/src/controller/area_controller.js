@@ -21,7 +21,6 @@ const getAreaById = async (req, res) => {
       res.status(404).json({ error: 'Khu vực không tồn tại' });
       return;
     }
-
     res.json(schedule);
   } catch (error) {
     console.error('Error fetching Area by ID:', error);
@@ -106,13 +105,11 @@ const updateArea = async (req, res) => {
 const deleteArea = async (req, res) => {
   try {
     const { id } = req.params;
-
     const result = await AreaService.deleteArea(id);
     if (!result) {
       res.status(404).json({ error: 'Khu vực không tồn tại' });
       return;
     }
-
     res.json({ message: 'Khu vực đã được xóa' });
   } catch (error) {
     console.error('Lỗi khi xóa khu vực', error);
