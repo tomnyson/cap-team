@@ -51,9 +51,15 @@ export default function GroupsDialog({ open, onClose, onSave, initialData }) {
     groupServices.createGroup(groupData).then((response) => {
       if (response.data.message === 'Người dùng đã tạo group với tên này trước đó.') {
         toast.error('Người dùng đã tạo group với tên này trước đó.');
-      } else {
+      } else if (response.data.message === 'Tạo group thành công') {
         toast.success('Tạo nhóm thành công');
-        onSave(groupData);
+        console.log(response.data.data);
+        console.log(groupData);
+        onSave({
+          ...groupData,
+          id: response.data.data.id,
+          name: response.data.data.name
+        });
         onClose();
       }
     });

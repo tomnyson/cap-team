@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -21,6 +21,7 @@ import GroupsTableRow from '../groups-table-row';
 import TableEmptyRows from '../groups-empty-rows';
 import GroupsTableHead from '../groups-table-head';
 import GroupsTableToolbar from '../groups-table-toolbar';
+import groupServices from 'src/services/group.services';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
 export default function AreasView() {
@@ -32,6 +33,23 @@ export default function AreasView() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openDialog, setOpenDialog] = useState(false);
+
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  
+  useEffect(() => {
+    const fetchgroups = async () => {
+      try {
+        const response = await groupServices.getAllGroupByUserId({ user_id : currentUser.id });
+        console.log(response);
+        setGroups(response);
+      } catch (error) {
+        throw new Error(error.response ? error.response.data.message : error.message);
+      }
+    };
+
+
+    fetchgroups();
+  })
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
