@@ -82,7 +82,7 @@ export default function TicketTableRow({
 
         <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Xoá
+          Vô hiệu hoá
         </MenuItem>
       </Popover>
 

@@ -10,9 +10,7 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { getAllTicket } from 'src/apis/ticket';
-import { getAllEventByEmail } from 'src/apis/event';
-
+import ticketServices from 'src/services/ticket.services';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
@@ -34,14 +32,30 @@ export default function TicketView() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openDialog, setOpenDialog] = useState(false);
   const [events, setEvent] = useState([]);
+  console.log('🚀 ~ TicketView ~ events:', events);
+
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
   useEffect(() => {
-    getAllTicket().then((res) => {
-      setTickets(res.data.ticket);
-    });
-    getAllEventByEmail('hptprobook@gmail.com').then((res) => {
-      setEvent(res.data);
-    });
+    const fetchTickets = async () => {
+      try {
+        const response = await ticketServices.getAllTicket();
+        setTickets(response.ticket);
+      } catch (error) {
+        console.error('Failed to fetch tickets:', error.message);
+      }
+    };
+
+    const fetchEvents = async () => {
+      try {
+        const response = await ticketServices.getAllEventByEmail(currentUser.email);
+        setEvent(response);
+      } catch (error) {
+        console.error('Failed to fetch events:', error.message);
+      }
+    };
+    fetchTickets();
+    fetchEvents();
   }, []);
 
   const handleSort = (event, id) => {
@@ -168,7 +182,7 @@ export default function TicketView() {
                       id={row.id}
                       name={row.name}
                       price={row.price}
-                      event={row.event.name}
+                      event={row?.event?.name}
                       events={events}
                       quantity={row.quantity}
                       opening_date={row.opening_date}
