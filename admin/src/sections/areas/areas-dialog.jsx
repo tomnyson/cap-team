@@ -4,49 +4,66 @@ import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   Button,
-  Select,
-  MenuItem,
   TextField,
-  InputLabel,
   DialogTitle,
-  FormControl,
   DialogContent,
   DialogActions,
 } from '@mui/material';
 
-import { tickets } from 'src/_mock/tickets';
+import { createArea, updateArea } from 'src/apis/areas';
 
-export default function AreasDialog({ open, onClose, onSave, initialData }) {
+export default function AreasDialog({ open, onClose, onSave, initialData, eventid, load }) {
   const [name, setName] = useState('');
   const [eventId, setEventId] = useState('');
   const [openingDate, setOpeningDate] = useState('');
   const [description, setDescription] = useState('');
   const [saleEndDate, setSaleEndDate] = useState('');
-
   useEffect(() => {
     if (initialData) {
       setName(initialData.name);
       setEventId(initialData.event_id);
-      setDescription(initialData.description)
+      setDescription(initialData.description);
       setOpeningDate(initialData.opening_date);
       setSaleEndDate(initialData.sale_end_date);
     }
   }, [initialData]);
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (initialData) {
+      const areasData = {
+        name,
+        event_id: eventId,
+        start_date: new Date(openingDate).toISOString(),
+        end_date: new Date(saleEndDate).toISOString(),
+        description: description,
+      };
+      const Edit = await updateArea(initialData.id, areasData);
+      if (Edit.status == 200) {
+        console.log('Sửa khu vực thành công');
+        load();
+        onClose();
+      } else {
+        console.log('Có lỗi xảy ra thử lại sau');
+        onClose();
+      }
+      return;
+    }
     const areasData = {
-      id: initialData ? initialData.id : Math.random().toString(36).substr(2, 9),
       name,
-      event_id: eventId,
-      opening_date: new Date(openingDate).toISOString(),
-      sale_end_date: new Date(saleEndDate).toISOString(),
-      description:description,
-      event: {
-        name: tickets.find((event) => event.event_id === eventId).event.name,
-      },
+      event_id: eventid,
+      start_date: new Date(openingDate).toISOString(),
+      end_date: new Date(saleEndDate).toISOString(),
+      description: description,
     };
-    onSave(areasData);
-    onClose();
+    const add = await createArea(areasData);
+
+    if (add.status == 200) {
+      console.log('Thêm khu vực thành công');
+      load();
+      onClose();
+    } else {
+      console.log('Có lỗi xảy ra thử lại sau');
+      onClose();
+    }
   };
 
   return (
@@ -61,17 +78,6 @@ export default function AreasDialog({ open, onClose, onSave, initialData }) {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-      
-        <FormControl fullWidth margin="dense">
-          <InputLabel>Sự kiện</InputLabel>
-          <Select value={eventId} onChange={(e) => setEventId(e.target.value)} label="Sự kiện">
-            {tickets.map((event) => (
-              <MenuItem key={event.event_id} value={event.event_id}>
-                {event.event.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
         <TextField
           margin="dense"
           label="Ngày tạo"
@@ -94,14 +100,14 @@ export default function AreasDialog({ open, onClose, onSave, initialData }) {
             shrink: true,
           }}
         />
-      <TextField
-          margin='dense'
-          label='Mô tả...'
+        <TextField
+          margin="dense"
+          label="Mô tả..."
           multiline
-          rows={4} // Số dòng mặc định bạn muốn hiển thị
+          rows={4}
           fullWidth
           value={description}
-          onChange={e => setDescription(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)}
         />
       </DialogContent>
       <DialogActions>

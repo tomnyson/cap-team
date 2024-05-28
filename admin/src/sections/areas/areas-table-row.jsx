@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
@@ -9,12 +9,15 @@ import { Popover, MenuItem } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
 
-import AreasDialog from './areas-dialog';  
+import AreasDialog from './areas-dialog';
+import { deleteArea } from 'src/apis/areas';
 
 export default function AreasTableRow({
   selected,
+  load,
   name,
-  event,
+  id,
+  id_event,
   opening_date,
   sale_end_date,
   description,
@@ -23,7 +26,6 @@ export default function AreasTableRow({
 }) {
   const [open, setOpen] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-
   const handleOpenMenu = (e) => {
     setOpen(e.currentTarget);
   };
@@ -31,7 +33,6 @@ export default function AreasTableRow({
   const handleCloseMenu = () => {
     setOpen(null);
   };
-
   const handleOpenDialog = () => {
     setOpenDialog(true);
     handleCloseMenu();
@@ -40,7 +41,12 @@ export default function AreasTableRow({
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
-
+  const handleDeleArea = async () => {
+    setOpen(null);
+    console.log(id);
+    const del = await deleteArea(id);
+    console.log(del);
+  };
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -48,7 +54,7 @@ export default function AreasTableRow({
           <Checkbox checked={selected} onChange={handleClick} />
         </TableCell>
         <TableCell>{name}</TableCell>
-        <TableCell>{event}</TableCell>
+        {/* <TableCell>{event}</TableCell> */}
         <TableCell>{description}</TableCell>
         <TableCell>{new Date(opening_date).toLocaleDateString()}</TableCell>
         <TableCell>{new Date(sale_end_date).toLocaleDateString()}</TableCell>
@@ -73,20 +79,21 @@ export default function AreasTableRow({
           Sửa
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleDeleArea} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Xoá
         </MenuItem>
       </Popover>
 
       <AreasDialog
+        load={load}
         open={openDialog}
         onClose={handleCloseDialog}
         onSave={onEdit}
         initialData={{
-          id: name,
+          id,
+          event_id: id_event,
           name,
-          event_id: event,
           description: description,
           opening_date,
           sale_end_date,

@@ -15,6 +15,7 @@ const hostname = process.env.HOST_NAME;
 
 // parse application/json
 
+
 const corsOptions = {
   origin: ['http://localhost:3030', 'https://event.ptepathway.com'], // URLs of your React apps
   credentials: true, // Allow credentials (cookies, authorization headers, etc.)
@@ -24,6 +25,7 @@ const corsOptions = {
 
 
 app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
