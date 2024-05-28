@@ -30,7 +30,7 @@ const navConfig = [
   {
     title: 'Group',
     path: '/group',
-    // icon: icon('material-symbols:group'),
+    icon: icon('ic_lock'),
   },
   {
     title: 'login',
