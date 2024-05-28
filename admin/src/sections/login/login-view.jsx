@@ -22,7 +22,11 @@ export default function LoginView() {
   const theme = useTheme();
 
   const router = useRouter();
-  const { handleSubmit, control, formState: { errors } } = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
   const { showToast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -43,7 +47,13 @@ export default function LoginView() {
           name="email"
           control={control}
           defaultValue=""
-          rules={{ required: 'Email là bắt buộc', pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/, message: 'email address không đúng' } }}
+          rules={{
+            required: 'Email là bắt buộc',
+            pattern: {
+              value: /^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+              message: 'email address không đúng',
+            },
+          }}
           render={({ field }) => (
             <TextField
               {...field}
@@ -59,7 +69,10 @@ export default function LoginView() {
           name="password"
           control={control}
           defaultValue=""
-          rules={{ required: 'Mật khẩu is required', minLength: { value: 6, message: 'Mật khẩu ít nhất 6 số' } }}
+          rules={{
+            required: 'Mật khẩu is required',
+            minLength: { value: 6, message: 'Mật khẩu ít nhất 6 số' },
+          }}
           render={({ field }) => (
             <TextField
               {...field}
@@ -89,13 +102,7 @@ export default function LoginView() {
         </Link>
       </Stack>
 
-      <LoadingButton
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        color="primary"
-      >
+      <LoadingButton fullWidth size="large" type="submit" variant="contained" color="primary">
         Login
       </LoadingButton>
     </form>
@@ -111,7 +118,6 @@ export default function LoginView() {
         height: 1,
       }}
     >
-
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card
           sx={{
@@ -124,7 +130,11 @@ export default function LoginView() {
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Chưa có tài khoản?
-            <Link onClick={() => router.push('/register')} variant="subtitle2" sx={{ ml: 0.5, cursor: 'pointer' }}>
+            <Link
+              onClick={() => router.push('/register')}
+              variant="subtitle2"
+              sx={{ ml: 0.5, cursor: 'pointer' }}
+            >
               Đăng ký
             </Link>
           </Typography>

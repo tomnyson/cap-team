@@ -23,7 +23,8 @@ import EventTableHead from '../event-table-head';
 import EventTableRow from '../event-table-row';
 import AddEventModal from '../add-event-modal';
 import { stubTrue } from 'lodash';
-
+import eventServices from "src/services/event.services";
+import {useRouter} from "../../../routes/hooks";
 // ----------------------------------------------------------------------
 
 export default function EventPage() {
@@ -55,14 +56,16 @@ export default function EventPage() {
     }
   };
   const getEvent = () => {
-    const email = localStorage.getItem('email');
-
-    handleRequest('get', `/getAllEventByEmail?email=${email}`).then((res) => {
-      setEvent(res.data);
-    });
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const email = currentUser.email;
+     eventServices.getAllByEmail({ email }).then((res) => {
+       console.log(res)
+         setEvent(res);
+    })
   }
   useEffect(() => {
-    const userId = localStorage.getItem('user_id');
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      const userId = currentUser.id;
     getEvent();
     handleRequest('get', `/getAllGroupByUserId?user_id=${userId}`).then((res) => {
       setGroup(res.data);
@@ -125,6 +128,15 @@ export default function EventPage() {
   const handleCloseDialog = () => {
     setOpenDialog(false);
   }
+  const route = useRouter();
+
+  const handleNavigate = (id) => {
+    const eventDetail = event.find((item) => item.id === id);
+    route.send(`/events/${id}`, {
+      'event': eventDetail
+    })
+  }
+
 
   return (
     <Container>
@@ -168,6 +180,7 @@ export default function EventPage() {
                   .map((row) => (
                     <EventTableRow
                       key={row.id}
+                      id={row.id}
                       name={row.name}
                       start_date={row.start_date}
                       status={row.status}
@@ -175,6 +188,7 @@ export default function EventPage() {
                       event_type={row.event_type}
                       selected={selected.indexOf(row.name) !== -1}
                       handleClick={(event) => handleClick(event, row.name)}
+                      handleNavigate={handleNavigate}
                     />
                   ))}
 

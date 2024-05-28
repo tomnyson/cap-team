@@ -64,7 +64,8 @@ export default function AddEventModal({ open, onClose, onCreateEvent, groups }) 
     },
     validationSchema: eventShcema,
     onSubmit: (values) => {
-      const userId = localStorage.getItem('user_id');
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      const userId = currentUser.id;
       values.user_id = userId;
       handleRequest('post', '/createEvent', values)
         .then((res) => {

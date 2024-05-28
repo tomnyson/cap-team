@@ -64,10 +64,10 @@ const createTicket = async (req, res) => {
       opening_date,
       sale_end_date,
     };
-    const ev = await EventService.updateEvent(event_id, { is_ticket: true });
     const ticket = await TicketService.createTicket(data);
     if (ticket) {
       res.status(200).json({ message: 'Tạo vé thành công' });
+      const ev = await EventService.updateEvent(event_id, { is_ticket: true });
     } else res.status(300).json({ message: 'Tạo mã vé thất bại' });
   } catch (error) {
     console.error('Lỗi tại controller:', error);
