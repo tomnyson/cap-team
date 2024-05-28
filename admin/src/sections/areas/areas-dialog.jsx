@@ -23,10 +23,14 @@ export default function AreasDialog({ open, onClose, onSave, initialData, eventi
       setName(initialData.name);
       setEventId(initialData.event_id);
       setDescription(initialData.description);
-      setOpeningDate(initialData.opening_date);
-      setSaleEndDate(initialData.sale_end_date);
+      setOpeningDate(formatDateTimeLocal(initialData.opening_date));
+      setSaleEndDate(formatDateTimeLocal(initialData.sale_end_date));
     }
   }, [initialData]);
+  const formatDateTimeLocal = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().slice(0, 16);
+  };
   const handleSubmit = async () => {
     if (initialData) {
       const areasData = {
