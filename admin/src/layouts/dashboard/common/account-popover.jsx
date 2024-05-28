@@ -38,11 +38,10 @@ export default function AccountPopover() {
     setOpen(event.currentTarget);
   };
 
-  const { user, logout } = useAuth();
+  const { user, logout, getUserInfo } = useAuth();
+  const currentUser = getUserInfo()
   const handleClose = () => {
     setOpen(null);
-    logout();
-    navigate(['/login']);
   };
 
   return (
@@ -61,14 +60,14 @@ export default function AccountPopover() {
       >
         <Avatar
           src={account.photoURL}
-          alt={account.displayName}
+          alt={currentUser?.name}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {account.displayName.charAt(0).toUpperCase()}
+          {currentUser?.name.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
@@ -89,10 +88,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            {currentUser?.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {currentUser?.email}
           </Typography>
         </Box>
 
@@ -109,7 +108,10 @@ export default function AccountPopover() {
         <MenuItem
           disableRipple
           disableTouchRipple
-          onClick={handleClose}
+          onClick={() => {
+            logout();
+            navigate(['/login']);
+          }}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
           Logout

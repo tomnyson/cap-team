@@ -322,7 +322,7 @@ module.exports = {
      logout,
     registerAndSendOTP,
     confirmOTPAndActivateAccount,
-    // refreshToken,
+    refreshToken,
     // logout,
     forgotPassword,
     resetPassword
