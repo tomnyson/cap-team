@@ -1,9 +1,9 @@
 
 import axios from 'axios';
 
-import { API_GET_USER_GROUP, API_GET_GROUP_BY_USER, API_CREATE_GROUP,API_DELETE_GROUP } from './const.js';
+import { API_GET_USER_GROUP, API_GET_GROUP_BY_USER, API_CREATE_GROUP,API_DELETE_GROUP, API_ADD_USER_GROUP } from './const.js';
 // import api from './axios.js';
-
+import authServices from './auth.services.js';
 const groupServices = {
     getUserGroupById: async ({ group_id }) => {
         try {
@@ -53,6 +53,25 @@ const groupServices = {
         } catch (error) {
             console.error(error);
             return []
+        }
+    },
+    addUserToGroup: async ({email, group_id}) => {
+        try {
+            const user = await authServices.getInfoUserByEmail({ email })
+            const response = 
+            await axios.post(`${API_ADD_USER_GROUP}`,{group_id, user_id: [user.id]},{
+                headers: {
+                    'Authorization': 'Bearer '+localStorage.getItem('authToken')
+                }
+            });
+            if (response.status < 200 || response.status >= 300) {
+                throw new Error(response.statusText);
+            }
+            return response.data;
+            // set info of current user
+        } catch (error) {
+            console.error(error);
+            return error
         }
     },
     deleteGroup: async (payload) => {

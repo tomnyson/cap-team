@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -10,8 +10,6 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { users } from 'src/_mock/user';
-
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
@@ -21,14 +19,17 @@ import UserTableHead from '../user-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-
+import { useParams } from 'react-router-dom';
+import groupService from 'src/services/group.services';
+import GroupsDialog from '../groups-dialog';
+import { useAuth } from 'src/context/AuthContext';
 // ----------------------------------------------------------------------
 
 export default function UserGroupView() {
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
-
+  const [openDialog, setOpenDialog] = useState(false);
   const [selected, setSelected] = useState([]);
 
   const [orderBy, setOrderBy] = useState('name');
@@ -36,7 +37,25 @@ export default function UserGroupView() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  const { group_id } = useParams();
+  const { user, logout, getUserInfo } = useAuth();
+  const currentUser = getUserInfo()
+  const [users, setUsers] = useState([])
+  console.log(group_id);
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const response = await groupService.getUserGroupById({ group_id: group_id });
+        setUsers(response);
+      } catch (error) {
+        console.error('Error fetching groups:', error);
+      }
+    }
+    console.log(group_id);
+    if (group_id) {
+      fetchGroups();
+    }
+  }, [])
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {
@@ -81,6 +100,10 @@ export default function UserGroupView() {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
   const handleFilterByName = (event) => {
     setPage(0);
     setFilterName(event.target.value);
@@ -99,7 +122,7 @@ export default function UserGroupView() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Users</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button onClick={() => setOpenDialog(true)} variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
           New User
         </Button>
       </Stack>
@@ -122,12 +145,10 @@ export default function UserGroupView() {
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'company', label: 'Company' },
-                  { id: 'role', label: 'Role' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
-                  { id: 'status', label: 'Status' },
-                  { id: '' },
+                  { id: 'tên', label: 'tên' },
+                  { id: 'email', label: 'email' },
+                  { id: 'giới tính', label: 'Giới tính' },
+                  { id: 'action', label: 'Action' }
                 ]}
               />
               <TableBody>
@@ -136,6 +157,7 @@ export default function UserGroupView() {
                   .map((row) => (
                     <UserTableRow
                       key={row.id}
+                      user={user}
                       name={row.name}
                       role={row.role}
                       status={row.status}
@@ -157,7 +179,13 @@ export default function UserGroupView() {
             </Table>
           </TableContainer>
         </Scrollbar>
-
+        <GroupsDialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+          group_id={group_id}
+        // initialData={}
+        // onSave={onEdit}
+        />
         <TablePagination
           page={page}
           component="div"
