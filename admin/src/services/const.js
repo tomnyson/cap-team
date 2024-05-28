@@ -17,3 +17,5 @@ export const API_USER_CONFIRM_OTP = `${API_PATH}/auth/resetPassword`;
 export const API_USER_VERIFY_EMAIL = `${API_PATH}/auth/confirmOtpRegisted`;
 export const API_USER_INFO_BY_EMAIL = `${API}/api/getUserbyEmail`;
 export const API_USER_REFRESH_TOKEN = '/api/auth/refresh-token';
+
+export const API_GETALL_ATTENDANCE_BY_EVENTID = `${API_PATH}/getAllAttendanceByEventId`;
