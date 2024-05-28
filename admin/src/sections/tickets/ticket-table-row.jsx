@@ -12,6 +12,7 @@ import Iconify from 'src/components/iconify';
 import TicketDialog from './ticket-dialog';
 import ticketServices from 'src/services/ticket.services';
 import { toast } from 'react-toastify';
+import { NavLink } from 'react-router-dom';
 
 export default function TicketTableRow({
   selected,
@@ -27,6 +28,7 @@ export default function TicketTableRow({
   onEdit,
   onDisable,
   events,
+  event_id,
 }) {
   const [open, setOpen] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -73,7 +75,22 @@ export default function TicketTableRow({
         </TableCell>
         <TableCell>{name}</TableCell>
         <TableCell>{price}</TableCell>
-        <TableCell>{event}</TableCell>
+        <NavLink
+          style={{
+            textDecoration: 'none',
+          }}
+          to={`/events/${event_id}`}
+        >
+          <TableCell
+            sx={{
+              ':hover': {
+                color: 'primary.main',
+              },
+            }}
+          >
+            {event}
+          </TableCell>
+        </NavLink>
         <TableCell align="center">{quantity}</TableCell>
         <TableCell>{new Date(opening_date).toLocaleDateString()}</TableCell>
         <TableCell>{new Date(sale_end_date).toLocaleDateString()}</TableCell>

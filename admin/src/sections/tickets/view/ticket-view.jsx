@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
@@ -9,11 +8,9 @@ import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-
 import ticketServices from 'src/services/ticket.services';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
-
 import TableNoData from '../table-no-data';
 import TicketDialog from '../ticket-dialog';
 import TicketTableRow from '../ticket-table-row';
@@ -21,6 +18,9 @@ import TableEmptyRows from '../table-empty-rows';
 import TicketTableHead from '../ticket-table-head';
 import TicketTableToolbar from '../ticket-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
+import AddEventModal from 'src/sections/event/add-event-modal';
+import { Box } from '@mui/material';
+import handleRequest from 'src/apis/request';
 
 export default function TicketView() {
   const [tickets, setTickets] = useState([]);
@@ -32,28 +32,34 @@ export default function TicketView() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openDialog, setOpenDialog] = useState(false);
   const [events, setEvent] = useState([]);
-  console.log('🚀 ~ TicketView ~ events:', events);
-
+  const [openEventDialog, setOpenEventDialog] = useState(false);
+  const [group, setGroup] = useState([]);
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-  useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        const response = await ticketServices.getAllTicket();
-        setTickets(response.ticket);
-      } catch (error) {
-        console.error('Failed to fetch tickets:', error.message);
-      }
-    };
+  const fetchTickets = async () => {
+    try {
+      const response = await ticketServices.getAllTicket();
+      setTickets(response.ticket);
+    } catch (error) {
+      console.error('Failed to fetch tickets:', error.message);
+    }
+  };
 
-    const fetchEvents = async () => {
-      try {
-        const response = await ticketServices.getAllEventByEmail(currentUser.email);
-        setEvent(response);
-      } catch (error) {
-        console.error('Failed to fetch events:', error.message);
-      }
-    };
+  const fetchEvents = async () => {
+    try {
+      const response = await ticketServices.getAllEventByEmail(currentUser.email);
+      setEvent(response);
+    } catch (error) {
+      console.error('Failed to fetch events:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const userId = currentUser.id;
+    handleRequest('get', `/getAllGroupByUserId?user_id=${userId}`).then((res) => {
+      setGroup(res.data);
+    });
     fetchTickets();
     fetchEvents();
   }, []);
@@ -117,14 +123,21 @@ export default function TicketView() {
     setOpenDialog(false);
   };
 
-  const handleCreateTicket = (newTicket) => {
-    setTickets([newTicket, ...tickets]);
+  const handleCreateTicket = async (newTicket) => {
+    await fetchTickets(); // Fetch lại danh sách tickets sau khi tạo mới
   };
 
-  const handleEditTicket = (updatedTicket) => {
-    setTickets((prevTickets) =>
-      prevTickets.map((ticket) => (ticket.id === updatedTicket.id ? updatedTicket : ticket))
-    );
+  const handleEditTicket = async (updatedTicket) => {
+    await fetchTickets(); // Fetch lại danh sách tickets sau khi cập nhật
+  };
+
+  const handleOpenEventDialog = () => {
+    setOpenEventDialog(true);
+  };
+
+  const handleCloseEventDialog = () => {
+    setOpenEventDialog(false);
+    fetchEvents();
   };
 
   const dataFiltered = applyFilter({
@@ -140,14 +153,26 @@ export default function TicketView() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Vé</Typography>
 
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-          onClick={handleOpenDialog}
-        >
-          Tạo vé mới
-        </Button>
+        <Box>
+          <Button
+            variant="contained"
+            color="inherit"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            sx={{ mr: 2 }}
+            onClick={handleOpenEventDialog}
+          >
+            Tạo sự kiện mới
+          </Button>
+
+          <Button
+            variant="contained"
+            color="inherit"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            onClick={handleOpenDialog}
+          >
+            Tạo vé mới
+          </Button>
+        </Box>
       </Stack>
 
       {tickets.length === 0 ? (
@@ -234,6 +259,15 @@ export default function TicketView() {
         onClose={handleCloseDialog}
         onSave={handleCreateTicket}
         events={events}
+      />
+
+      <AddEventModal
+        open={openEventDialog}
+        onClose={handleCloseEventDialog}
+        onCreateEvent={() => {
+          handleCloseEventDialog();
+        }}
+        groups={group}
       />
     </Container>
   );
