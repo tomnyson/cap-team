@@ -15,7 +15,7 @@ const hostname = process.env.HOST_NAME;
 
 // parse application/json
 
-app.use(cors());
+// app.use(cors());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
