@@ -186,7 +186,7 @@ export default function TicketView() {
                       id={row.id}
                       name={row.name}
                       price={row.price}
-                      event={row.event.name}
+                      event={row?.event?.name}
                       events={events}
                       quantity={row.quantity}
                       opening_date={row.opening_date}
