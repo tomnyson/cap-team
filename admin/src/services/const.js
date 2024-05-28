@@ -27,3 +27,4 @@ export const API_GET_USER_GROUP = `${API_PATH}/getAllUserByGroupId`
 export const API_GET_GROUP_BY_USER = `${API_PATH}/getAllGroupByUserId`
 export const API_CREATE_GROUP = `${API_PATH}/createGroup`
 export const API_DELETE_GROUP = `${API_PATH}/deleteGroup`
+export const API_ADD_USER_GROUP = `${API_PATH}/addMember`

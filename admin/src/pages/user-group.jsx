@@ -1,16 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { GroupsView } from '../sections/groups/view';
+import { UserGroupView } from 'src/sections/user-group/view';
+
 // ----------------------------------------------------------------------
 
-export default function GroupsPage() {
+export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> Quản lý user </title>
+        <title> User | Minimal UI </title>
       </Helmet>
 
-      <GroupsView />
+      <UserGroupView />
     </>
   );
 }

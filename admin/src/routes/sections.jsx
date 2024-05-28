@@ -20,6 +20,7 @@ export const VerifyEmail = lazy(() => import('src/pages/verify-email'));
 import PrivateRoute from '../components/PrivateRoute';
 import VerifyEmailPage from 'src/pages/verify-email';
 export const GroupsPage = lazy(() => import('src/pages/groups'));
+export const UserGroupPage = lazy(() => import('src/pages/user-group'));
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -36,7 +37,8 @@ export default function Router() {
         </DashboardLayout>
       ),
       children: [
-        { path: '/', element: <EventPage /> },
+        { path: '/', element: <TicketsPage /> },
+        { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'tickets', element: <TicketsPage /> },
         { path: 'blog', element: <BlogPage /> },
@@ -44,6 +46,7 @@ export default function Router() {
         { path: 'events', element: <EventPage /> },
         { path: 'events/:id', element: <EventEditPage /> },
         { path: 'group', element: <GroupsPage /> },
+        { path: 'group/:group_id', element: <UserGroupPage /> },
       ],
     },
     {

@@ -6,7 +6,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import { Popover, MenuItem } from '@mui/material';
-
+import { useRouter } from 'src/routes/hooks';
 import Iconify from 'src/components/iconify';
 
 import GroupsDialog from './groups-dialog';
@@ -21,6 +21,7 @@ export default function GroupsTableRow({
 }) {
   const [open, setOpen] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const router = useRouter();
 
   const handleOpenMenu = (e) => {
     setOpen(e.currentTarget);
@@ -59,9 +60,16 @@ export default function GroupsTableRow({
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{
-          sx: { width: 140 },
+          sx: { width: 200 },
         }}
       >
+        <MenuItem onClick={() => {
+          router.push(`/group/${id}`)
+          handleCloseMenu()
+        }}>
+          <Iconify icon="eva:people-fill" sx={{ mr: 2 }} />
+          quản lý thành viên
+        </MenuItem>
         <MenuItem onClick={handleOpenDialog}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Sửa
