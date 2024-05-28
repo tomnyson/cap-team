@@ -3,9 +3,20 @@ import handleRequest from './request';
 
 // API endpoints
 const createGroup = (data) => handleRequest('post', '/api/createGroup', data);
-// const chageStatus = (data) => handleRequest('put', '/api/chageStatus', data);
-// const getAllEventByEmail = (email) =>
-//   handleRequest('get', `/api/getAllEventByEmail?email=${email}`);
-// const updateEvent = (data) => handleRequest('post', '/api/updateEvent', data);
+// const updateGroup = (data) => handleRequest('put', '/api/updateGroup', data);
+// const getAllGroupByUserId = (user_id) =>
+//   handleRequest('get', `api/getAllGroupByUserId?user_id=${user_id}`);
+// const getAllUserByGroupId = (group_id) =>
+//   handleRequest('get', `api/getAllUserByGroupId?group_id=${group_id}`);
+// const addMember = (data) => handleRequest('post', '/api/addMember', data);
+// const deleteMember = (data) => handleRequest('delete', '/api/deleteMember', data);
+// const deleteGroup = (data) => handleRequest('delete', '/api/deleteGroup', data);
+
+
+// deleteGroup
+// getAllGroupByUserId
+// addMember
+// deleteMember
+// getAllUserByGroupId
 
 export { createGroup};
