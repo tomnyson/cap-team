@@ -10,7 +10,8 @@ const area = require('./area_router');
 const attendance = require('./attendance_router');
 const schedule = require('./schedule_router');
 const comment = require('./comment_router');
-const chart = require('./chart_router')
+const chart = require('./chart_router');
+const { json } = require('sequelize');
 const index = (app) => {
     app.use("/", area);
     app.use("/", attendance);
