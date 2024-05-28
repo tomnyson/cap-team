@@ -8,6 +8,7 @@ import EditEventPanel from './edit-event-panel';
 import Button from '@mui/material/Button';
 import UserListPanel from './user-list';
 import attendanceServices from 'src/services/attendance.services';
+import AddQRPanel from './add-qr-panel';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -38,8 +39,7 @@ function a11yProps(index) {
   };
 }
 
-export default function EventEditTab({ event, groups }) {
-  console.log(event);
+export default function EventEditTab({ event, groups, areas }) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -68,9 +68,7 @@ export default function EventEditTab({ event, groups }) {
         <EditEventPanel groups={groups} event={event} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <Button autoFocus variant="contained">
-          Tạo
-        </Button>
+        <AddQRPanel eventId={event.id} areas={areas} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <UserListPanel users={users} />

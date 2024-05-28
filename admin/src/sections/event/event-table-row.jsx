@@ -57,10 +57,10 @@ export default function EventTableRow({
 
                 {/* <TableCell>{role}</TableCell> */}
 
-                <TableCell align="center">{event_type ? 'Yes' : 'No'}</TableCell>
+                <TableCell align="center">{event_type}</TableCell>
 
                 <TableCell>
-                    <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
+                    <Label color={(status === false && 'error') || 'success'}>{status ? 'Công bố': 'Chưa công bố'}</Label>
                 </TableCell>
 
                 <TableCell align="right">
