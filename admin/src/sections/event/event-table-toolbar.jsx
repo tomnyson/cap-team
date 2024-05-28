@@ -33,7 +33,7 @@ export default function EventTableToolbar({ numSelected, filterName, onFilterNam
         <OutlinedInput
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search user..."
+          placeholder="Tìm sự kiện..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify
