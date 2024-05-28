@@ -164,7 +164,7 @@ module.exports = {
     logout,
     registerOTP,
     confirmOtpRegisted,
-    // refreshTokenCrl,
+    refreshTokenCrl,
     // logout,
     forgotPassword,
     resetPassword

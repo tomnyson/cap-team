@@ -14,6 +14,7 @@
   "keywords": [
     "nodejs"
   ],
+  "proxy": "http://localhost:3344",
   "author": "Thien",
   "license": "ISC",
   "bugs": {

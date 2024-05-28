@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -10,38 +10,67 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { groups as initialgroups } from 'src/_mock/groups';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
 import TableNoData from '../table-no-data';
-import GroupsDialog from '../groups-dialog';
-import GroupsTableRow from '../groups-table-row';
-import TableEmptyRows from '../groups-empty-rows';
-import GroupsTableHead from '../groups-table-head';
-import GroupsTableToolbar from '../groups-table-toolbar';
+import TableEmptyRows from '../table-empty-rows';
 import { emptyRows, applyFilter, getComparator } from '../utils';
+import handleRequest from 'src/apis/request';
+import EventTableToolbar from '../event-table-toolbar';
+import EventTableHead from '../event-table-head';
+import EventTableRow from '../event-table-row';
+import AddEventModal from '../add-event-modal';
+import { stubTrue } from 'lodash';
 
-export default function AreasView() {
-  const [groups, setGroups] = useState(initialgroups);
-  const [page, setPage] = useState(0);
-  const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
-  const [orderBy, setOrderBy] = useState('name');
-  const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+// ----------------------------------------------------------------------
+
+export default function EventPage() {
+
   const [openDialog, setOpenDialog] = useState(false);
+
+  const [page, setPage] = useState(0);
+
+  const [event, setEvent] = useState([]);
+
+  const [group, setGroup] = useState([]);
+
+
+  const [order, setOrder] = useState('asc');
+
+  const [selected, setSelected] = useState([]);
+
+  const [orderBy, setOrderBy] = useState('name');
+
+  const [filterName, setFilterName] = useState('');
+
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(id);
+    if (id !== '') {
+      setOrder(isAsc ? 'desc' : 'asc');
+      setOrderBy(id);
+    }
   };
+  const getEvent = () => {
+    const email = localStorage.getItem('email');
 
+    handleRequest('get', `/getAllEventByEmail?email=${email}`).then((res) => {
+      setEvent(res.data);
+    });
+  }
+  useEffect(() => {
+    const userId = localStorage.getItem('user_id');
+    getEvent();
+    handleRequest('get', `/getAllGroupByUserId?user_id=${userId}`).then((res) => {
+      setGroup(res.data);
+    });
+  }, []);
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = groups.map((n) => n.name);
+      const newSelecteds = event.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -80,49 +109,35 @@ export default function AreasView() {
     setFilterName(event.target.value);
   };
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
-  const handleCreategroups = (newareas) => {
-    setGroups([newareas, ...groups]);
-  };
-
-  const handleEditgroups = (updatedgroups) => {
-    setGroups((prevareas) =>
-      prevareas.map((groups) => (groups.id === updatedgroups.id ? updatedgroups : groups))
-    );
-  };
-
   const dataFiltered = applyFilter({
-    inputData: groups,
+    inputData: event,
     comparator: getComparator(order, orderBy),
     filterName,
   });
 
   const notFound = !dataFiltered.length && !!filterName;
 
+  const handleCreateEvent = (data) => {
+    if(data) {
+      getEvent();
+    }
+  }
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  }
+
   return (
     <Container>
-    
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Nhóm</Typography>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-          onClick={handleOpenDialog}
-        >
-          Thêm nhóm
+        <Typography variant="h4">Sự kiện</Typography>
+
+        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />} onClick={()=> setOpenDialog(true)}>
+          Thêm mới
         </Button>
       </Stack>
 
       <Card>
-        <GroupsTableToolbar
+        <EventTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
@@ -131,15 +146,19 @@ export default function AreasView() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <GroupsTableHead
+              <EventTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={groups.length}
+                rowCount={event.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Tên Nhóm' },
+                  { id: 'name', label: 'Name' },
+                  { id: 'start_date', label: 'Start Date' },
+                  { id: 'end_date', label: 'End Date' },
+                  { id: 'event_type', label: 'Event Type', align: 'center' },
+                  { id: 'status', label: 'Status' },
                   { id: '' },
                 ]}
               />
@@ -147,19 +166,23 @@ export default function AreasView() {
                 {dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <GroupsTableRow
+                    <EventTableRow
                       key={row.id}
                       name={row.name}
+                      start_date={row.start_date}
+                      status={row.status}
+                      end_date={row.end_date}
+                      event_type={row.event_type}
                       selected={selected.indexOf(row.name) !== -1}
                       handleClick={(event) => handleClick(event, row.name)}
-                      onEdit={handleEditgroups}
                     />
                   ))}
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, groups.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, event.length)}
                 />
+
                 {notFound && <TableNoData query={filterName} />}
               </TableBody>
             </Table>
@@ -169,15 +192,14 @@ export default function AreasView() {
         <TablePagination
           page={page}
           component="div"
-          count={groups.length}
+          count={event.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
-
-      <GroupsDialog open={openDialog} onClose={handleCloseDialog} onSave={handleCreategroups} />
+      <AddEventModal open={openDialog} onClose={handleCloseDialog} groups={group} onCreateEvent={handleCreateEvent} />
     </Container>
   );
 }

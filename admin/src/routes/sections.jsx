@@ -3,6 +3,7 @@ import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import TicketsPage from 'src/pages/tickets';
 import DashboardLayout from 'src/layouts/dashboard';
+export const EventPage = lazy(() => import('src/pages/event'));
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
@@ -34,16 +35,15 @@ export default function Router() {
         </DashboardLayout>
       ),
       children: [
-        { path: 'dashboard', element: <IndexPage />, index: true },
+        { path: '/', element: <IndexPage /> },
+        { path: 'dashboard', element: <IndexPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'tickets', element: <TicketsPage /> },
         { path: 'blog', element: <BlogPage /> },
-
         { path: 'areas', element: <AreasPage /> },
-
+        { path: 'events', element: <EventPage /> },
         { path: 'group', element: <GroupsPage /> },
-
       ],
     },
     {

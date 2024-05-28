@@ -15,16 +15,26 @@ const hostname = process.env.HOST_NAME;
 
 // parse application/json
 
-// app.use(cors());
+
+const corsOptions = {
+  origin: ['http://localhost:3030', 'https://event.ptepathway.com'], // URLs of your React apps
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods if needed
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers if needed
+};
+
+
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(
-  cors({
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     credentials: true,
+//   })
+// );
 
 // db.Roles.create({
 //   id:"1",
@@ -44,6 +54,9 @@ app.use(
 //   console.error('Error occurred while retrieving users:', error);
 // });
 //console.log(db.Role);
+app.get('/', (req, res) => {
+  return res.send(`Server is running.. ${Date()}`);
+})
 routes(app);
 
 app.listen(port, hostname, () => {
