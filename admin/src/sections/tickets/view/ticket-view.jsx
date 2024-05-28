@@ -150,76 +150,84 @@ export default function TicketView() {
         </Button>
       </Stack>
 
-      <Card>
-        <TicketTableToolbar
-          numSelected={selected.length}
-          filterName={filterName}
-          onFilterName={handleFilterByName}
-        />
+      {tickets.length === 0 ? (
+        <Card>
+          <Typography variant="h6" align="center" p={3}>
+            Chưa có vé nào, bấm vào Tạo vé mới để tạo ngay
+          </Typography>
+        </Card>
+      ) : (
+        <Card>
+          <TicketTableToolbar
+            numSelected={selected.length}
+            filterName={filterName}
+            onFilterName={handleFilterByName}
+          />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <TicketTableHead
-                order={order}
-                orderBy={orderBy}
-                rowCount={tickets.length}
-                numSelected={selected.length}
-                onRequestSort={handleSort}
-                onSelectAllClick={handleSelectAllClick}
-                headLabel={[
-                  { id: 'name', label: 'Tên vé' },
-                  { id: 'price', label: 'Giá' },
-                  { id: 'event', label: 'Sự kiện' },
-                  { id: 'quantity', label: 'Số lượng', align: 'center' },
-                  { id: 'opening_date', label: 'Ngày tạo' },
-                  { id: 'sale_end_date', label: 'Ngày kết thúc' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <TicketTableRow
-                      key={row.id}
-                      id={row.id}
-                      name={row.name}
-                      price={row.price}
-                      event={row?.event?.name}
-                      events={events}
-                      quantity={row.quantity}
-                      opening_date={row.opening_date}
-                      sale_end_date={row.sale_end_date}
-                      status={row.status}
-                      selected={selected.indexOf(row.name) !== -1}
-                      handleClick={(event) => handleClick(event, row.name)}
-                      onEdit={handleEditTicket}
-                      onDisable={handleDisableTicket}
-                    />
-                  ))}
-
-                <TableEmptyRows
-                  height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, tickets.length)}
+          <Scrollbar>
+            <TableContainer sx={{ overflow: 'unset' }}>
+              <Table sx={{ minWidth: 800 }}>
+                <TicketTableHead
+                  order={order}
+                  orderBy={orderBy}
+                  rowCount={tickets.length}
+                  numSelected={selected.length}
+                  onRequestSort={handleSort}
+                  onSelectAllClick={handleSelectAllClick}
+                  headLabel={[
+                    { id: 'name', label: 'Tên vé' },
+                    { id: 'price', label: 'Giá' },
+                    { id: 'event', label: 'Sự kiện' },
+                    { id: 'quantity', label: 'Số lượng', align: 'center' },
+                    { id: 'opening_date', label: 'Ngày tạo' },
+                    { id: 'sale_end_date', label: 'Ngày kết thúc' },
+                    { id: '' },
+                  ]}
                 />
+                <TableBody>
+                  {dataFiltered
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => (
+                      <TicketTableRow
+                        key={row.id}
+                        id={row.id}
+                        name={row.name}
+                        price={row.price}
+                        event={row?.event?.name}
+                        events={events}
+                        quantity={row.quantity}
+                        opening_date={row.opening_date}
+                        sale_end_date={row.sale_end_date}
+                        status={row.status}
+                        selected={selected.indexOf(row.name) !== -1}
+                        handleClick={(event) => handleClick(event, row.name)}
+                        onEdit={handleEditTicket}
+                        onDisable={handleDisableTicket}
+                      />
+                    ))}
 
-                {notFound && <TableNoData query={filterName} />}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar>
+                  <TableEmptyRows
+                    height={77}
+                    emptyRows={emptyRows(page, rowsPerPage, tickets.length)}
+                  />
 
-        <TablePagination
-          page={page}
-          component="div"
-          count={tickets.length}
-          rowsPerPage={rowsPerPage}
-          onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Card>
+                  {notFound && <TableNoData query={filterName} />}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Scrollbar>
+
+          <TablePagination
+            page={page}
+            component="div"
+            count={tickets.length}
+            rowsPerPage={rowsPerPage}
+            onPageChange={handleChangePage}
+            rowsPerPageOptions={[5, 10, 25]}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Card>
+      )}
 
       <TicketDialog
         open={openDialog}
