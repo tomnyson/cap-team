@@ -52,6 +52,9 @@ app.use(cookieParser());
 //   console.error('Error occurred while retrieving users:', error);
 // });
 //console.log(db.Role);
+app.get('/', (req, res) => {
+  return res.send(`Server is running.. ${Date()}`);
+})
 routes(app);
 
 app.listen(port, hostname, () => {
