@@ -13,7 +13,7 @@ const navConfig = [
     icon: icon('ic_event'),
   },
   {
-    title: 'Group',
+    title: 'Nhóm',
     path: '/group',
     icon: icon('ic_group'),
   },

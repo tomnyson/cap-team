@@ -55,8 +55,6 @@ export default function AreasView() {
       fetchGroups();
     }
   }, [currentUser]);
-
-
   useEffect(() => {
     const fetchgroups = async () => {
       try {

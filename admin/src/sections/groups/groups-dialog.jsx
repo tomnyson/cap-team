@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 
 import groupServices from 'src/services/group.services';
-
+// import authServices from 'src/services/auth.services';
 
 export default function GroupsDialog({ open, onClose, onSave, initialData }) {
   const [name, setName] = useState('');
@@ -28,7 +28,16 @@ export default function GroupsDialog({ open, onClose, onSave, initialData }) {
     }
   }, [initialData]);
 
-
+  // authServices.getInfoUserByEmail({ email : "thien999@gmail.com" }).then((response) => {
+  //   try {
+  //     console.log(response);
+  //     setUserId(response.id);
+  //   }
+  //   catch (error) {
+  //     console.error('Error fetching groups:', error);
+  //     throw new Error(error.response ? error.response.data.message : error.message);
+  //   }
+  // })
   const validate = () => {
     const newErrors = {};
   
@@ -62,7 +71,7 @@ export default function GroupsDialog({ open, onClose, onSave, initialData }) {
         });
         onClose();
       }
-    });
+    }); 
   };
 
   return (
@@ -76,6 +85,8 @@ export default function GroupsDialog({ open, onClose, onSave, initialData }) {
           fullWidth
           value={name}
           onChange={(e) => setName(e.target.value)}
+          error={!!errors.name}
+          helperText={errors.name}
         />
       
       </DialogContent>
