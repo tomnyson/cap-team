@@ -1,7 +1,7 @@
 // axiosConfig.js
 import axios from 'axios';
 // Create an Axios instance with custom configuration
-const handleGetToken = () => localStorage.getItem('token');
+const handleGetToken = () => localStorage.getItem('authToken');
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_ROOT, // Replace with your API base URL
   timeout: 10000, // Request timeout in milliseconds
