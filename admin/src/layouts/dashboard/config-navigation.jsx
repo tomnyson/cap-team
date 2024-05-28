@@ -18,29 +18,19 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
-    title: 'product',
-    path: '/products',
-    icon: icon('ic_cart'),
+    title: 'Group',
+    path: '/group',
+    icon: icon('ic_user'),
   },
   {
-    title: 'blog',
-    path: '/blog',
-    icon: icon('ic_blog'),
-  },
-  {
-    title: 'login',
-    path: '/login',
-    icon: icon('ic_lock'),
-  },
-  {
-    title: 'vé',
+    title: 'Vé',
     path: '/tickets',
     icon: icon('ic_lock'),
   },
   {
-    title: 'Not found',
-    path: '/404',
-    icon: icon('ic_disabled'),
+    title: 'Khu Vực',
+    path: '/areas',
+    icon: icon('ic_lock'),
   },
 ];
 
