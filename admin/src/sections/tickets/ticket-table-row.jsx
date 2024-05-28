@@ -9,7 +9,9 @@ import { Popover, MenuItem } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
 
-import TicketDialog from './ticket-dialog'; // Chuyển đổi CreateTicketDialog thành TicketDialog
+import TicketDialog from './ticket-dialog';
+import ticketServices from 'src/services/ticket.services';
+import { toast } from 'react-toastify';
 
 export default function TicketTableRow({
   selected,
@@ -23,6 +25,7 @@ export default function TicketTableRow({
   status,
   handleClick,
   onEdit,
+  onDisable,
   events,
 }) {
   const [open, setOpen] = useState(null);
@@ -43,6 +46,21 @@ export default function TicketTableRow({
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+  };
+
+  const handleDisableTicket = async () => {
+    try {
+      const response = await ticketServices.disableTicket({ id });
+      if (response.message !== 'Vô hiệu hoá thành công') {
+        toast.error(response.message);
+      } else {
+        toast.success('Vô hiệu hoá thành công');
+        handleCloseMenu();
+        onDisable(id); // Notify the parent component
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const currentEvent = events?.find((e) => e.name === event) || {};
@@ -80,7 +98,7 @@ export default function TicketTableRow({
           Sửa
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleDisableTicket} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Vô hiệu hoá
         </MenuItem>
@@ -118,5 +136,6 @@ TicketTableRow.propTypes = {
   status: PropTypes.bool,
   handleClick: PropTypes.func,
   onEdit: PropTypes.func,
+  onDisable: PropTypes.func.isRequired, // Add the new prop here
   events: PropTypes.array.isRequired,
 };

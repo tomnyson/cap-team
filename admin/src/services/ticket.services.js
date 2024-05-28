@@ -33,7 +33,11 @@ const ticketServices = {
 
   disableTicket: async (data) => {
     try {
-      const response = await axios.post(API_DISABLE_TICKET, data);
+      const response = await axios.post(API_DISABLE_TICKET, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        },
+      });
       return handleResponse(response);
     } catch (error) {
       throw new Error(error.response ? error.response.data.message : error.message);

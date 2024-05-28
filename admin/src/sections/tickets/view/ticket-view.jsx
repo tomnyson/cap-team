@@ -58,6 +58,10 @@ export default function TicketView() {
     fetchEvents();
   }, []);
 
+  const handleDisableTicket = (id) => {
+    setTickets((prevTickets) => prevTickets.filter((ticket) => ticket.id !== id));
+  };
+
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -182,7 +186,7 @@ export default function TicketView() {
                       id={row.id}
                       name={row.name}
                       price={row.price}
-                      event={row?.event?.name}
+                      event={row.event.name}
                       events={events}
                       quantity={row.quantity}
                       opening_date={row.opening_date}
@@ -191,6 +195,7 @@ export default function TicketView() {
                       selected={selected.indexOf(row.name) !== -1}
                       handleClick={(event) => handleClick(event, row.name)}
                       onEdit={handleEditTicket}
+                      onDisable={handleDisableTicket}
                     />
                   ))}
 
