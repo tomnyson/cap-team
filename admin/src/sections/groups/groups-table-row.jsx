@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
@@ -9,23 +9,17 @@ import { Popover, MenuItem } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
 
-import AreasDialog from './areas-dialog';
-import { deleteArea } from 'src/apis/areas';
+import GroupsDialog from './groups-dialog';  
 
-export default function AreasTableRow({
+export default function GroupsTableRow({
   selected,
-  load,
   name,
-  id,
-  id_event,
-  opening_date,
-  sale_end_date,
-  description,
   handleClick,
   onEdit,
 }) {
   const [open, setOpen] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+
   const handleOpenMenu = (e) => {
     setOpen(e.currentTarget);
   };
@@ -33,6 +27,7 @@ export default function AreasTableRow({
   const handleCloseMenu = () => {
     setOpen(null);
   };
+
   const handleOpenDialog = () => {
     setOpenDialog(true);
     handleCloseMenu();
@@ -41,12 +36,7 @@ export default function AreasTableRow({
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
-  const handleDeleArea = async () => {
-    setOpen(null);
-    console.log(id);
-    const del = await deleteArea(id);
-    console.log(del);
-  };
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -54,10 +44,6 @@ export default function AreasTableRow({
           <Checkbox checked={selected} onChange={handleClick} />
         </TableCell>
         <TableCell>{name}</TableCell>
-        {/* <TableCell>{event}</TableCell> */}
-        <TableCell>{description}</TableCell>
-        <TableCell>{new Date(opening_date).toLocaleDateString()}</TableCell>
-        <TableCell>{new Date(sale_end_date).toLocaleDateString()}</TableCell>
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
             <Iconify icon="eva:more-vertical-fill" />
@@ -79,38 +65,28 @@ export default function AreasTableRow({
           Sửa
         </MenuItem>
 
-        <MenuItem onClick={handleDeleArea} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Xoá
         </MenuItem>
       </Popover>
 
-      <AreasDialog
-        load={load}
+      <GroupsDialog
         open={openDialog}
         onClose={handleCloseDialog}
         onSave={onEdit}
         initialData={{
-          id,
-          event_id: id_event,
+          id: name,
           name,
-          description: description,
-          opening_date,
-          sale_end_date,
         }}
       />
     </>
   );
 }
 
-AreasTableRow.propTypes = {
+GroupsTableRow.propTypes = {
   selected: PropTypes.bool,
   name: PropTypes.string,
-  event: PropTypes.string,
-  description: PropTypes.string,
-  opening_date: PropTypes.string,
-  sale_end_date: PropTypes.string,
-  status: PropTypes.bool,
   handleClick: PropTypes.func,
   onEdit: PropTypes.func,
 };
