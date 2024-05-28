@@ -56,12 +56,11 @@ export default function AreasView() {
     }
   }, [currentUser]);
 
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  
+
   useEffect(() => {
     const fetchgroups = async () => {
       try {
-        const response = await groupServices.getAllGroupByUserId({ user_id : currentUser.id });
+        const response = await groupServices.getAllGroupByUserId({ user_id: currentUser.id });
         setGroups(response);
       } catch (error) {
         throw new Error(error.response ? error.response.data.message : error.message);
