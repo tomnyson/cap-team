@@ -16,10 +16,12 @@ import {
   FormHelperText,
 } from '@mui/material';
 
-import { createTicket } from 'src/apis/ticket';
+import { createTicket, updateTicket } from 'src/apis/ticket';
 
 export default function TicketDialog({ open, onClose, onSave, initialData, events }) {
+  console.log('🚀 ~ TicketDialog ~ initialData:', initialData);
   const [name, setName] = useState('');
+  console.log('🚀 ~ TicketDialog ~ name:', name);
   const [price, setPrice] = useState('');
   const [eventId, setEventId] = useState('');
   const [quantity, setQuantity] = useState('');
@@ -91,6 +93,36 @@ export default function TicketDialog({ open, onClose, onSave, initialData, event
       } else {
         toast.success('Tạo vé thành công');
         onSave(ticketData);
+        onClose();
+      }
+    });
+  };
+
+  const handleUpdate = () => {
+    if (!validate()) return;
+
+    const ticketData = {
+      id: initialData.id,
+      name,
+      price: parseInt(price, 10),
+      event_id: eventId,
+      quantity: parseInt(quantity, 10),
+      minimum: parseInt(minimum, 10),
+      maximum: parseInt(maximum, 10),
+      opening_date: new Date(openingDate).toISOString(),
+      sale_end_date: new Date(saleEndDate).toISOString(),
+      status: true,
+      event: {
+        name: events.find((event) => event.id === eventId).name,
+      },
+    };
+    const { event, status, ...sendToServerData } = ticketData;
+    updateTicket(sendToServerData).then((response) => {
+      if (response.data.message !== 'Cập nhật vé thành công') {
+        toast.error(response.data.message);
+      } else {
+        toast.success('Cập nhật vé thành công');
+        onSave(initialData);
         onClose();
       }
     });
@@ -192,9 +224,19 @@ export default function TicketDialog({ open, onClose, onSave, initialData, event
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Hủy</Button>
-        <Button onClick={handleSubmit} color="primary">
-          {initialData ? 'Lưu' : 'Tạo'}
-        </Button>
+        {initialData ? (
+          <>
+            <Button onClick={handleUpdate} color="primary">
+              Lưu
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button onClick={handleSubmit} color="primary">
+              Tạo
+            </Button>
+          </>
+        )}
       </DialogActions>
     </Dialog>
   );

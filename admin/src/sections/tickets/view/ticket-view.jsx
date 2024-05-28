@@ -12,7 +12,6 @@ import TablePagination from '@mui/material/TablePagination';
 
 import { getAllTicket } from 'src/apis/ticket';
 import { getAllEventByEmail } from 'src/apis/event';
-import { tickets as initialTickets } from 'src/_mock/tickets';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -26,7 +25,7 @@ import TicketTableToolbar from '../ticket-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
 export default function TicketView() {
-  const [tickets, setTickets] = useState(initialTickets);
+  const [tickets, setTickets] = useState([]);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -35,7 +34,6 @@ export default function TicketView() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openDialog, setOpenDialog] = useState(false);
   const [events, setEvent] = useState([]);
-  console.log('🚀 ~ TicketView ~ events:', events);
 
   useEffect(() => {
     getAllTicket().then((res) => {
@@ -167,6 +165,7 @@ export default function TicketView() {
                   .map((row) => (
                     <TicketTableRow
                       key={row.id}
+                      id={row.id}
                       name={row.name}
                       price={row.price}
                       event={row.event.name}

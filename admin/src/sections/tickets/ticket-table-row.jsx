@@ -13,6 +13,7 @@ import TicketDialog from './ticket-dialog'; // Chuyển đổi CreateTicketDialo
 
 export default function TicketTableRow({
   selected,
+  id,
   name,
   price,
   event,
@@ -22,7 +23,7 @@ export default function TicketTableRow({
   status,
   handleClick,
   onEdit,
-  events, // Thêm prop events
+  events,
 }) {
   const [open, setOpen] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -90,13 +91,14 @@ export default function TicketTableRow({
         onClose={handleCloseDialog}
         onSave={onEdit}
         initialData={{
-          id: name,
+          id,
           name,
           price,
           event_id: currentEvent.id,
           quantity,
           opening_date,
           sale_end_date,
+          event,
         }}
         events={events}
       />
@@ -106,6 +108,7 @@ export default function TicketTableRow({
 
 TicketTableRow.propTypes = {
   selected: PropTypes.bool,
+  id: PropTypes.string,
   name: PropTypes.string,
   price: PropTypes.number,
   event: PropTypes.string,
