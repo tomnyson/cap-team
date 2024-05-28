@@ -1,7 +1,9 @@
 import axios from 'axios';
 import api from './axios.js';
 
-const API_PATH = import.meta.env.VITE_API;
+const API  = import.meta.env.VITE_API
+
+const API_PATH = `${API}/api`
 
 const groupServices = {
   createGroup: async (data) => {
@@ -69,7 +71,6 @@ const groupServices = {
       if (response.status < 200 || response.status >= 300) {
         throw new Error(response.statusText);
       }
-      console.log(response);
       return response.data;
     } catch (error) {
       throw new Error(error.response ? error.response.data.message : error.message);

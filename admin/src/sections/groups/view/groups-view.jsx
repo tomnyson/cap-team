@@ -40,7 +40,6 @@ export default function AreasView() {
     const fetchgroups = async () => {
       try {
         const response = await groupServices.getAllGroupByUserId({ user_id : currentUser.id });
-        console.log(response);
         setGroups(response);
       } catch (error) {
         throw new Error(error.response ? error.response.data.message : error.message);
