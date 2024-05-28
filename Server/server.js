@@ -15,14 +15,12 @@ const hostname = process.env.HOST_NAME;
 
 // parse application/json
 
-
 const corsOptions = {
   origin: ['http://localhost:3030', 'https://event.ptepathway.com'], // URLs of your React apps
   credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods if needed
   allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers if needed
 };
-
 
 app.use(cors(corsOptions));
 
@@ -56,7 +54,7 @@ app.use(cookieParser());
 //console.log(db.Role);
 app.get('/', (req, res) => {
   return res.send(`Server is running.. ${Date()}`);
-})
+});
 routes(app);
 
 app.listen(port, hostname, () => {
